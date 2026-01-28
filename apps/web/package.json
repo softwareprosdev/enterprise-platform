@@ -11,7 +11,10 @@
     "lint:fix": "eslint src --ext .ts,.tsx --fix",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:debug": "playwright test --debug"
   },
   "dependencies": {
     "@enterprise/api": "workspace:*",
@@ -47,6 +50,7 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
+    "@playwright/test": "^1.50.0",
     "@tanstack/router-devtools": "^1.98.0",
     "@tanstack/router-plugin": "^1.98.0",
     "@types/node": "^22.10.7",
