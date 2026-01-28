@@ -1,4 +1,4 @@
-import { router, protectedProcedure } from '../router.js';
+import { router, protectedProcedure } from '../trpc.js';
 import { clients, projects, tasks, milestones, activityLogs, users } from '@enterprise/db/schema';
 import { eq, and, desc, sql, gte, inArray } from '@enterprise/db';
 

@@ -105,7 +105,9 @@ function LoginPage() {
                   />
                   {field.state.meta.errors?.[0] && (
                     <p className="text-destructive text-sm mt-1">
-                      {field.state.meta.errors[0]}
+                      {typeof field.state.meta.errors[0] === 'string'
+                        ? field.state.meta.errors[0]
+                        : field.state.meta.errors[0]?.message || 'Invalid value'}
                     </p>
                   )}
                 </div>
@@ -152,7 +154,9 @@ function LoginPage() {
                   </div>
                   {field.state.meta.errors?.[0] && (
                     <p className="text-destructive text-sm mt-1">
-                      {field.state.meta.errors[0]}
+                      {typeof field.state.meta.errors[0] === 'string'
+                        ? field.state.meta.errors[0]
+                        : field.state.meta.errors[0]?.message || 'Invalid value'}
                     </p>
                   )}
                 </div>

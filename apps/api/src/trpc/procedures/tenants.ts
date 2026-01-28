@@ -1,5 +1,5 @@
 import { TRPCError } from '@trpc/server';
-import { router, protectedProcedure, ownerProcedure } from '../router.js';
+import { router, protectedProcedure, ownerProcedure } from '../trpc.js';
 import { tenantUpdateSchema } from '@enterprise/shared';
 import { tenants } from '@enterprise/db/schema';
 import { eq } from '@enterprise/db';

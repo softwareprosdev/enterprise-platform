@@ -1,6 +1,6 @@
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
-import { router, protectedProcedure } from '../router.js';
+import { router, protectedProcedure } from '../trpc.js';
 import { clientCreateSchema, clientUpdateSchema, paginationSchema } from '@enterprise/shared';
 import { clients } from '@enterprise/db/schema';
 import { eq, and, desc, ilike, or } from '@enterprise/db';

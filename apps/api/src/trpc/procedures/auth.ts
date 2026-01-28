@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { randomBytes } from 'node:crypto';
 import { hash, verify } from '@node-rs/argon2';
 import { generateId } from '@enterprise/shared';
-import { router, publicProcedure, protectedProcedure } from '../router.js';
+import { router, publicProcedure, protectedProcedure } from '../trpc.js';
 import { loginSchema, registerSchema, mfaVerifySchema } from '@enterprise/shared';
 import { users, sessions, tenants } from '@enterprise/db/schema';
 import { eq } from '@enterprise/db';

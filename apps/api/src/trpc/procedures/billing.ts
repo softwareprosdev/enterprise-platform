@@ -1,6 +1,6 @@
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
-import { router, protectedProcedure, ownerProcedure } from '../router.js';
+import { router, protectedProcedure, ownerProcedure } from '../trpc.js';
 import { plans, subscriptions, invoices, tenants } from '@enterprise/db/schema';
 import { eq, desc } from '@enterprise/db';
 
