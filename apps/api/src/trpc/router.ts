@@ -37,11 +37,14 @@ const isAuthed = t.middleware(({ ctx, next }) => {
       message: 'You must be logged in to access this resource',
     });
   }
+  // Narrow the types after the null check
+  const user = ctx.user;
+  const tenant = ctx.tenant;
   return next({
     ctx: {
       ...ctx,
-      user: ctx.user,
-      tenant: ctx.tenant,
+      user,
+      tenant,
     },
   });
 });
@@ -60,11 +63,13 @@ const isAdmin = t.middleware(({ ctx, next }) => {
       message: 'You do not have permission to access this resource',
     });
   }
+  const user = ctx.user;
+  const tenant = ctx.tenant;
   return next({
     ctx: {
       ...ctx,
-      user: ctx.user,
-      tenant: ctx.tenant,
+      user,
+      tenant,
     },
   });
 });
@@ -83,11 +88,13 @@ const isOwner = t.middleware(({ ctx, next }) => {
       message: 'Only the workspace owner can access this resource',
     });
   }
+  const user = ctx.user;
+  const tenant = ctx.tenant;
   return next({
     ctx: {
       ...ctx,
-      user: ctx.user,
-      tenant: ctx.tenant,
+      user,
+      tenant,
     },
   });
 });

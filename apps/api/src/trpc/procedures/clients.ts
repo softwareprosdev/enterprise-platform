@@ -23,18 +23,20 @@ export const clientsRouter = router({
       let whereClause = eq(clients.tenantId, ctx.tenant.id);
 
       if (status) {
-        whereClause = and(whereClause, eq(clients.status, status))!;
+        const combined = and(whereClause, eq(clients.status, status));
+        if (combined) whereClause = combined;
       }
 
       if (search) {
-        whereClause = and(
+        const combined = and(
           whereClause,
           or(
             ilike(clients.companyName, `%${search}%`),
             ilike(clients.contactName, `%${search}%`),
             ilike(clients.email, `%${search}%`)
           )
-        )!;
+        );
+        if (combined) whereClause = combined;
       }
 
       const clientList = await ctx.db.query.clients.findMany({

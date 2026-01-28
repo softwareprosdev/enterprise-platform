@@ -1,11 +1,12 @@
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
+import { randomBytes } from 'node:crypto';
 import { hash, verify } from '@node-rs/argon2';
 import { generateId } from '@enterprise/shared';
 import { router, publicProcedure, protectedProcedure } from '../router.js';
 import { loginSchema, registerSchema, mfaVerifySchema } from '@enterprise/shared';
-import { users, sessions, tenants, verificationTokens } from '@enterprise/db/schema';
-import { eq, and } from '@enterprise/db';
+import { users, sessions, tenants } from '@enterprise/db/schema';
+import { eq } from '@enterprise/db';
 import { sessionStore } from '../../lib/redis.js';
 import { createTOTPKeyURI, TOTPController } from 'oslo/otp';
 
@@ -319,8 +320,8 @@ export const authRouter = router({
 
   // Setup MFA
   setupMfa: protectedProcedure.mutation(async ({ ctx }) => {
-    const secret = crypto.getRandomValues(new Uint8Array(20));
-    const secretBase64 = Buffer.from(secret).toString('base64');
+    const secret = randomBytes(20);
+    const secretBase64 = secret.toString('base64');
 
     // Generate TOTP URI
     const uri = createTOTPKeyURI('Enterprise', ctx.user.email, secret);

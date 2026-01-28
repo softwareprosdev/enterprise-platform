@@ -1,7 +1,7 @@
 import type { CreateFastifyContextOptions } from '@trpc/server/adapters/fastify';
 import { db } from '@enterprise/db';
 import { users, sessions, tenants } from '@enterprise/db/schema';
-import { eq, and } from '@enterprise/db';
+import { eq } from '@enterprise/db';
 import type { AuthUser, Tenant } from '@enterprise/shared';
 
 export interface Context {
@@ -25,19 +25,6 @@ export async function createContext({ req, res }: CreateFastifyContextOptions): 
   if (sessionToken) {
     try {
       // Look up session in database
-      const sessionResult = await db.query.sessions.findFirst({
-        where: and(eq(sessions.id, sessionToken), eq(sessions.expiresAt, new Date())),
-        with: {
-          user: {
-            with: {
-              tenant: true,
-            },
-          },
-        },
-      });
-
-      // Note: The above query won't work correctly for checking expiry
-      // Let's do it properly
       const session = await db.query.sessions.findFirst({
         where: eq(sessions.id, sessionToken),
       });

@@ -44,23 +44,28 @@ export const tasksRouter = router({
       let whereClause = inArray(tasks.projectId, projectIds);
 
       if (projectId) {
-        whereClause = and(whereClause, eq(tasks.projectId, projectId))!;
+        const combined = and(whereClause, eq(tasks.projectId, projectId));
+        if (combined) whereClause = combined;
       }
 
       if (milestoneId) {
-        whereClause = and(whereClause, eq(tasks.milestoneId, milestoneId))!;
+        const combined = and(whereClause, eq(tasks.milestoneId, milestoneId));
+        if (combined) whereClause = combined;
       }
 
       if (assigneeId) {
-        whereClause = and(whereClause, eq(tasks.assigneeId, assigneeId))!;
+        const combined = and(whereClause, eq(tasks.assigneeId, assigneeId));
+        if (combined) whereClause = combined;
       }
 
       if (status) {
-        whereClause = and(whereClause, eq(tasks.status, status))!;
+        const combined = and(whereClause, eq(tasks.status, status));
+        if (combined) whereClause = combined;
       }
 
       if (priority) {
-        whereClause = and(whereClause, eq(tasks.priority, priority))!;
+        const combined = and(whereClause, eq(tasks.priority, priority));
+        if (combined) whereClause = combined;
       }
 
       const taskList = await ctx.db.query.tasks.findMany({

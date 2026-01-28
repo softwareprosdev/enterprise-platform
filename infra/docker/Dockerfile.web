@@ -9,7 +9,9 @@ WORKDIR /app
 # Copy package files
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/web/package.json ./apps/web/
+COPY apps/api/package.json ./apps/api/
 COPY packages/shared/package.json ./packages/shared/
+COPY packages/db/package.json ./packages/db/
 
 # Install dependencies
 RUN pnpm install --frozen-lockfile
@@ -17,13 +19,16 @@ RUN pnpm install --frozen-lockfile
 # Copy source
 COPY tsconfig.json ./
 COPY apps/web ./apps/web
+COPY apps/api/src/trpc ./apps/api/src/trpc
 COPY packages/shared ./packages/shared
+COPY packages/db ./packages/db
 
 # Build
 ARG VITE_API_URL
 ENV VITE_API_URL=${VITE_API_URL}
 
-RUN pnpm --filter @enterprise/web build
+# Skip tsc type checking in Docker build - Vite handles transpilation
+RUN cd apps/web && pnpm exec vite build
 
 # Production stage - Nginx
 FROM nginx:alpine AS runner

@@ -62,28 +62,28 @@ async function main() {
     trpcOptions: {
       router: appRouter,
       createContext,
-      onError: ({ error, path }) => {
+      onError: ({ error, path }: { error: Error; path: string | undefined }) => {
         console.error(`tRPC error on ${path}:`, error);
       },
     },
   });
 
   // Graceful shutdown
-  const signals: NodeJS.Signals[] = ['SIGINT', 'SIGTERM'];
-  signals.forEach((signal) => {
+  const signals = ['SIGINT', 'SIGTERM'] as const;
+  for (const signal of signals) {
     process.on(signal, async () => {
-      console.log(`Received ${signal}, shutting down gracefully...`);
+      fastify.log.warn(`Received ${signal}, shutting down gracefully...`);
       await fastify.close();
       await redis.quit();
       process.exit(0);
     });
-  });
+  }
 
   // Start server
   try {
     await fastify.listen({ port: PORT, host: HOST });
-    console.log(`API server running at http://${HOST}:${PORT}`);
-    console.log(`tRPC endpoint: http://${HOST}:${PORT}/trpc`);
+    fastify.log.info(`API server running at http://${HOST}:${PORT}`);
+    fastify.log.info(`tRPC endpoint: http://${HOST}:${PORT}/trpc`);
   } catch (err) {
     fastify.log.error(err);
     process.exit(1);

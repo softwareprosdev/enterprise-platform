@@ -6,4 +6,4 @@ export { db, client } from './client.js';
 export type { Database } from './client.js';
 
 // Export drizzle utilities
-export { eq, and, or, desc, asc, sql, inArray, notInArray, isNull, isNotNull } from 'drizzle-orm';
+export { eq, and, or, desc, asc, sql, inArray, notInArray, isNull, isNotNull, ilike, gte, lte, gt, lt, count } from 'drizzle-orm';

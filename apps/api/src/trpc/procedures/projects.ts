@@ -2,7 +2,7 @@ import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 import { router, protectedProcedure } from '../router.js';
 import { projectCreateSchema, projectUpdateSchema, paginationSchema } from '@enterprise/shared';
-import { projects, milestones, deliverables } from '@enterprise/db/schema';
+import { projects, milestones } from '@enterprise/db/schema';
 import { eq, and, desc, ilike } from '@enterprise/db';
 
 export const projectsRouter = router({
@@ -26,15 +26,18 @@ export const projectsRouter = router({
       let whereClause = eq(projects.tenantId, ctx.tenant.id);
 
       if (status) {
-        whereClause = and(whereClause, eq(projects.status, status))!;
+        const combined = and(whereClause, eq(projects.status, status));
+        if (combined) whereClause = combined;
       }
 
       if (clientId) {
-        whereClause = and(whereClause, eq(projects.clientId, clientId))!;
+        const combined = and(whereClause, eq(projects.clientId, clientId));
+        if (combined) whereClause = combined;
       }
 
       if (search) {
-        whereClause = and(whereClause, ilike(projects.name, `%${search}%`))!;
+        const combined = and(whereClause, ilike(projects.name, `%${search}%`));
+        if (combined) whereClause = combined;
       }
 
       const projectList = await ctx.db.query.projects.findMany({

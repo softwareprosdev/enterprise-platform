@@ -15,7 +15,7 @@ export const redis = new Redis(redisUrl, {
 });
 
 redis.on('connect', () => {
-  console.log('Redis connected');
+  // Connection established - logged at debug level by ioredis internally
 });
 
 redis.on('error', (err) => {

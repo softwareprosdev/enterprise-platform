@@ -44,8 +44,8 @@ COPY --from=builder /app/apps/api/dist ./apps/api/dist
 COPY --from=builder /app/packages/db ./packages/db
 COPY --from=builder /app/packages/shared ./packages/shared
 
-# Install production dependencies
-RUN pnpm install --frozen-lockfile --prod
+# Install production dependencies (ignore prepare script since husky is not needed in production)
+RUN pnpm install --frozen-lockfile --prod --ignore-scripts
 
 # Set ownership
 RUN chown -R enterprise:nodejs /app
