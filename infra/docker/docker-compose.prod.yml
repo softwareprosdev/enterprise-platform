@@ -1,0 +1,78 @@
+services:
+  api:
+    image: ghcr.io/softwareprosdev/enterprise-platform/api:latest
+    container_name: enterprise-api
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=redis://redis:6379
+      - AUTH_SECRET=${AUTH_SECRET}
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+      - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - internal
+      - web
+
+  web:
+    image: ghcr.io/softwareprosdev/enterprise-platform/web:latest
+    container_name: enterprise-web
+    restart: unless-stopped
+    depends_on:
+      - api
+    networks:
+      - internal
+      - web
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.enterprise.rule=Host(`enterprise.softwarepros.dev`)"
+      - "traefik.http.routers.enterprise.tls=true"
+      - "traefik.http.routers.enterprise.tls.certresolver=letsencrypt"
+      - "traefik.http.services.enterprise.loadbalancer.server.port=3000"
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: enterprise-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-enterprise}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-enterprise}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-enterprise} -d ${POSTGRES_DB:-enterprise}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - internal
+
+  redis:
+    image: redis:7-alpine
+    container_name: enterprise-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - internal
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  internal:
+  web:
+    external: true
