@@ -1,5 +1,4 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { useState } from 'react';
 import {
   CreditCard,
   Check,
@@ -21,8 +20,7 @@ export const Route = createFileRoute('/dashboard/billing/')({
 });
 
 function BillingPage() {
-  const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
-  const { data: tenant } = trpc.tenants.getCurrent.useQuery();
+  const { data: tenant } = trpc.tenants.current.useQuery();
 
   const plans = [
     {
@@ -197,7 +195,7 @@ function BillingPage() {
               </ul>
 
               <button
-                onClick={() => setSelectedPlan(plan.id)}
+                onClick={() => console.log('Upgrade to', plan.id)}
                 className={cn(
                   'w-full py-2.5 rounded-lg font-medium transition-colors',
                   currentPlan === plan.id

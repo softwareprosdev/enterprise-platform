@@ -5,7 +5,6 @@ import {
   User,
   Bell,
   Shield,
-  Palette,
   Globe,
   Mail,
   Phone,
@@ -31,7 +30,7 @@ type SettingsTab = 'company' | 'profile' | 'notifications' | 'security' | 'team'
 function SettingsPage() {
   const [activeTab, setActiveTab] = useState<SettingsTab>('company');
   const { data: user } = trpc.auth.me.useQuery();
-  const { data: tenant } = trpc.tenants.getCurrent.useQuery();
+  const { data: tenant } = trpc.tenants.current.useQuery();
 
   const tabs: { id: SettingsTab; label: string; icon: React.ReactNode }[] = [
     { id: 'company', label: 'Company', icon: <Building2 className="w-4 h-4" /> },
@@ -226,7 +225,7 @@ function ProfileSettings({ user }: { user: any }) {
         {/* Avatar */}
         <div className="flex items-center gap-6">
           <div className="w-20 h-20 rounded-full bg-gradient-to-br from-secondary to-secondary/80 flex items-center justify-center text-white text-2xl font-bold">
-            {formData.name.split(' ').map(n => n[0]).join('')}
+            {formData.name.split(' ').map((n: string) => n[0]).join('')}
           </div>
           <div>
             <button className="btn-secondary flex items-center gap-2">

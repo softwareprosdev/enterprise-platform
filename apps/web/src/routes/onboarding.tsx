@@ -57,9 +57,10 @@ function OnboardingPage() {
   }, [data]);
 
   const stepIndex = steps.indexOf(currentStep);
+  const validSteps = ['company', 'team', 'branding', 'integrations', 'billing', 'complete'];
   const goToNext = (next: string) => {
-    if (['company', 'team', 'branding', 'integrations', 'billing', 'complete'].includes(next)) {
-      setCurrentStep(next as 'company' | 'team' | 'branding' | 'integrations' | 'billing' | 'complete');
+    if (validSteps.includes(next)) {
+      setCurrentStep(next);
     }
   };
 
