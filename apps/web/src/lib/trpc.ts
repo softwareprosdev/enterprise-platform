@@ -13,11 +13,6 @@ export function createTRPCClient() {
       httpBatchLink({
         url: '/trpc',
         transformer: superjson,
-        headers() {
-          return {
-            'Content-Type': 'application/json',
-          };
-        },
       }),
     ],
   });

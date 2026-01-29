@@ -61,12 +61,12 @@ async function main() {
   fastify.addContentTypeParser(
     ['application/json', 'application/json; charset=utf-8'],
     { parseAs: 'string' },
-    function (_, body, _done) {
+    function (_req, body, done) {
       try {
         const json = typeof body === 'string' ? JSON.parse(body) : body;
-        return json;
-      } catch {
-        return body;
+        done(null, json);
+      } catch (err) {
+        done(err as Error, undefined);
       }
     }
   );
@@ -78,7 +78,7 @@ async function main() {
       router: appRouter,
       createContext,
       onError: ({ error, path }: { error: Error; path: string | undefined }) => {
-        console.error(`tRPC error on ${path}:`, error);
+        console.error(`tRPC error on ${path}: ${error.message}`);
       },
     },
   });

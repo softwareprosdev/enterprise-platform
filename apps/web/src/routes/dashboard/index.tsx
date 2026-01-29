@@ -40,7 +40,7 @@ const CHART_COLORS = ['#8b5cf6', '#ec4899', '#22c55e', '#f59e0b', '#3b82f6'];
 function DashboardPage() {
   const { data: stats, isLoading: statsLoading } = trpc.dashboard.stats.useQuery();
   const { data: projectsByStatus } = trpc.dashboard.projectsByStatus.useQuery();
-  const { data: tasksByStatus } = trpc.dashboard.tasksByStatus.useQuery();
+  trpc.dashboard.tasksByStatus.useQuery(); // Prefetch for future use
   const { data: revenueOverTime } = trpc.dashboard.revenueOverTime.useQuery();
   const { data: recentActivity } = trpc.dashboard.recentActivity.useQuery();
   const { data: upcomingDeadlines } = trpc.dashboard.upcomingDeadlines.useQuery();
@@ -264,12 +264,12 @@ function DashboardPage() {
         <motion.div {...fadeInUp} className="bg-card rounded-xl border border-border p-5">
           <h2 className="font-semibold mb-4">Upcoming Deadlines</h2>
           <div className="space-y-3">
-            {upcomingDeadlines?.milestones.length === 0 &&
-            upcomingDeadlines?.tasks.length === 0 ? (
+            {!upcomingDeadlines?.milestones?.length &&
+            !upcomingDeadlines?.tasks?.length ? (
               <p className="text-muted-foreground text-sm text-center py-8">No upcoming deadlines</p>
             ) : (
               <>
-                {upcomingDeadlines?.milestones.map((milestone) => (
+                {upcomingDeadlines?.milestones?.map((milestone) => (
                   <div
                     key={milestone.id}
                     className="flex items-center justify-between p-3 bg-muted/50 rounded-lg"
@@ -294,7 +294,7 @@ function DashboardPage() {
                     </div>
                   </div>
                 ))}
-                {upcomingDeadlines?.tasks.slice(0, 3).map((task) => (
+                {upcomingDeadlines?.tasks?.slice(0, 3).map((task) => (
                   <div
                     key={task.id}
                     className="flex items-center justify-between p-3 bg-muted/50 rounded-lg"
