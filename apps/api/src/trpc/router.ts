@@ -4,7 +4,9 @@ import { router } from './trpc.js';
 import { authRouter } from './procedures/auth.js';
 import { tenantsRouter } from './procedures/tenants.js';
 import { usersRouter } from './procedures/users.js';
-import { clientsRouter } from './procedures/clients.js';
+import { homeownersRouter } from './procedures/homeowners.js';
+import { subcontractorsRouter, tradesRouter } from './procedures/subcontractors.js';
+import { communicationsRouter } from './procedures/communications.js';
 import { projectsRouter } from './procedures/projects.js';
 import { tasksRouter } from './procedures/tasks.js';
 import { onboardingRouter } from './procedures/onboarding.js';
@@ -19,7 +21,10 @@ export const appRouter = router({
   auth: authRouter,
   tenants: tenantsRouter,
   users: usersRouter,
-  clients: clientsRouter,
+  homeowners: homeownersRouter,
+  subcontractors: subcontractorsRouter,
+  trades: tradesRouter,
+  communications: communicationsRouter,
   projects: projectsRouter,
   tasks: tasksRouter,
   onboarding: onboardingRouter,

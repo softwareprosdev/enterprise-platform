@@ -1,14 +1,20 @@
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, Link } from '@tanstack/react-router';
 import { motion } from 'framer-motion';
 import {
+  Home,
   Users,
-  FolderKanban,
-  CheckSquare,
+  HardHat,
+  Wrench,
+  Phone,
   DollarSign,
   TrendingUp,
-  ArrowUpRight,
-  ArrowDownRight,
+  AlertTriangle,
   Clock,
+  CheckCircle2,
+  Calendar,
+  MapPin,
+  ArrowRight,
+  CheckSquare,
 } from 'lucide-react';
 import {
   AreaChart,
@@ -23,7 +29,7 @@ import {
   Cell,
 } from 'recharts';
 import { trpc } from '@/lib/trpc';
-import { cn, formatCurrency, formatCompact, formatRelativeTime, statusColors } from '@/lib/utils';
+import { cn, formatCurrency, formatCompact, formatRelativeTime, statusColors, formatDate, phaseLabels } from '@/lib/utils';
 
 export const Route = createFileRoute('/dashboard/')({
   component: DashboardPage,
@@ -35,51 +41,61 @@ const fadeInUp = {
   transition: { duration: 0.3 },
 };
 
-const CHART_COLORS = ['#8b5cf6', '#ec4899', '#22c55e', '#f59e0b', '#3b82f6'];
+const CHART_COLORS = ['#1e3a5f', '#e85d04', '#22c55e', '#f59e0b', '#8b5cf6'];
 
 function DashboardPage() {
   const { data: stats, isLoading: statsLoading } = trpc.dashboard.stats.useQuery();
-  const { data: projectsByStatus } = trpc.dashboard.projectsByStatus.useQuery();
-  trpc.dashboard.tasksByStatus.useQuery(); // Prefetch for future use
+  const { data: projectsByPhase } = trpc.dashboard.projectsByPhase.useQuery();
   const { data: revenueOverTime } = trpc.dashboard.revenueOverTime.useQuery();
   const { data: recentActivity } = trpc.dashboard.recentActivity.useQuery();
   const { data: upcomingDeadlines } = trpc.dashboard.upcomingDeadlines.useQuery();
+  const { data: urgentCommunications } = trpc.dashboard.urgentCommunications.useQuery();
+  const { data: projectsAtRisk } = trpc.dashboard.projectsAtRisk.useQuery();
 
   const statCards = [
     {
-      label: 'Total Clients',
-      value: stats?.totalClients ?? 0,
+      label: 'Active Projects',
+      value: stats?.activeProjects ?? 0,
+      icon: Home,
+      color: 'text-[#1e3a5f]',
+      bgColor: 'bg-[#1e3a5f]/10',
+      change: '+5%',
+      changeType: 'positive',
+    },
+    {
+      label: 'Homeowners',
+      value: stats?.totalHomeowners ?? 0,
       icon: Users,
-      color: 'text-primary',
-      bgColor: 'bg-primary/10',
+      color: 'text-[#e85d04]',
+      bgColor: 'bg-[#e85d04]/10',
       change: '+12%',
       changeType: 'positive',
     },
     {
-      label: 'Active Projects',
-      value: stats?.activeProjects ?? 0,
-      icon: FolderKanban,
-      color: 'text-secondary',
-      bgColor: 'bg-secondary/10',
-      change: '+5%',
+      label: 'Subcontractors',
+      value: stats?.totalSubcontractors ?? 0,
+      icon: HardHat,
+      color: 'text-green-500',
+      bgColor: 'bg-green-500/10',
+      change: '+3%',
       changeType: 'positive',
     },
     {
       label: 'Pending Tasks',
       value: stats?.pendingTasks ?? 0,
       icon: CheckSquare,
-      color: 'text-warning',
-      bgColor: 'bg-warning/10',
-      change: '-8%',
+      color: 'text-yellow-500',
+      bgColor: 'bg-yellow-500/10',
+      change: stats?.blockedTasks ? `-${stats.blockedTasks} blocked` : '0 blocked',
       changeType: 'negative',
     },
     {
-      label: 'Revenue',
-      value: formatCurrency(stats?.revenue ?? 0),
+      label: 'Active Contracts',
+      value: formatCurrency(stats?.activeContractValue ?? 0),
       icon: DollarSign,
-      color: 'text-success',
-      bgColor: 'bg-success/10',
-      change: '+23%',
+      color: 'text-purple-500',
+      bgColor: 'bg-purple-500/10',
+      change: '+8%',
       changeType: 'positive',
     },
   ];
@@ -88,19 +104,76 @@ function DashboardPage() {
     <div className="space-y-6">
       {/* Page header */}
       <div>
-        <h1 className="text-2xl font-bold">Dashboard</h1>
-        <p className="text-muted-foreground">Welcome back! Here's an overview of your agency.</p>
+        <h1 className="text-2xl font-bold">Command Center</h1>
+        <p className="text-muted-foreground">Overview of Villa Homes operations</p>
       </div>
 
+      {/* Critical alerts */}
+      {(projectsAtRisk?.length || 0) > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 flex items-center gap-3"
+        >
+          <AlertTriangle className="w-5 h-5 text-red-500" />
+          <div className="flex-1">
+            <span className="font-medium text-red-500">{projectsAtRisk?.length} project{projectsAtRisk?.length !== 1 ? 's' : ''}</span>
+            <span className="text-muted-foreground ml-2">with detected risks</span>
+          </div>
+          <Link
+            to="/dashboard/projects"
+            className="text-sm text-red-500 hover:text-red-600 font-medium"
+          >
+            View projects
+          </Link>
+        </motion.div>
+      )}
+
+      {/* Urgent communications */}
+      {(urgentCommunications?.length || 0) > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-yellow-500/10 border border-yellow-500/20 rounded-xl p-4"
+        >
+          <div className="flex items-center gap-2 mb-3">
+            <Phone className="w-4 h-4 text-yellow-500" />
+            <span className="font-medium text-yellow-500">
+              {urgentCommunications?.length} urgent communication{urgentCommunications?.length !== 1 ? 's' : ''}
+            </span>
+          </div>
+          <div className="space-y-2">
+            {urgentCommunications?.slice(0, 3).map((comm) => (
+              <Link
+                key={comm.id}
+                to="/dashboard/communications"
+                className="flex items-center justify-between p-2 bg-card rounded-lg hover:bg-card-hover transition-colors"
+              >
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium">{comm.contactName || 'Unknown'}</span>
+                  <span className="text-xs text-muted-foreground">
+                    {comm.detectedRisk && 'Risk detected'}
+                    {comm.aiSummary && ' AI analyzed'}
+                  </span>
+                </div>
+                <span className="text-xs text-muted-foreground">
+                  {formatRelativeTime(comm.createdAt)}
+                </span>
+              </Link>
+            ))}
+          </div>
+        </motion.div>
+      )}
+
       {/* Stats grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         {statCards.map((stat, i) => (
           <motion.div
             key={stat.label}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.1 }}
-            className="bg-card rounded-xl border border-border p-5 card-hover"
+            className="bg-card rounded-xl border border-border p-5 hover:border-[#1e3a5f]/30 transition-colors"
           >
             <div className="flex items-center justify-between mb-3">
               <div className={cn('p-2 rounded-lg', stat.bgColor)}>
@@ -109,14 +182,9 @@ function DashboardPage() {
               <div
                 className={cn(
                   'flex items-center text-sm font-medium',
-                  stat.changeType === 'positive' ? 'text-success' : 'text-destructive'
+                  stat.changeType === 'positive' ? 'text-green-500' : 'text-yellow-500'
                 )}
               >
-                {stat.changeType === 'positive' ? (
-                  <ArrowUpRight className="w-4 h-4 mr-0.5" />
-                ) : (
-                  <ArrowDownRight className="w-4 h-4 mr-0.5" />
-                )}
                 {stat.change}
               </div>
             </div>
@@ -142,10 +210,12 @@ function DashboardPage() {
           className="lg:col-span-2 bg-card rounded-xl border border-border p-5"
         >
           <div className="flex items-center justify-between mb-4">
-            <h2 className="font-semibold">Revenue Overview</h2>
-            <div className="flex items-center gap-2 text-sm text-success">
-              <TrendingUp className="w-4 h-4" />
-              +23% this month
+            <h2 className="font-semibold">Cash Position</h2>
+            <div className="flex items-center gap-2 text-sm">
+              <span className="text-muted-foreground">Contract Value:</span>
+              <span className="text-green-500 font-medium">
+                {formatCurrency(stats?.activeContractValue ?? 0)}
+              </span>
             </div>
           </div>
           <div className="h-64">
@@ -156,8 +226,8 @@ function DashboardPage() {
               >
                 <defs>
                   <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0} />
+                    <stop offset="5%" stopColor="#1e3a5f" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="#1e3a5f" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="#2a2a3a" />
@@ -170,29 +240,37 @@ function DashboardPage() {
                     borderRadius: '8px',
                   }}
                   labelStyle={{ color: '#fff' }}
-                  formatter={(value: number) => [formatCurrency(value), 'Revenue']}
+                  formatter={(value: number) => [formatCurrency(value), 'Amount']}
                 />
                 <Area
                   type="monotone"
-                  dataKey="revenue"
-                  stroke="#8b5cf6"
+                  dataKey="billed"
+                  stroke="#1e3a5f"
                   strokeWidth={2}
                   fillOpacity={1}
                   fill="url(#revenueGradient)"
+                />
+                <Area
+                  type="monotone"
+                  dataKey="collected"
+                  stroke="#22c55e"
+                  strokeWidth={2}
+                  fillOpacity={0}
+                  fill="none"
                 />
               </AreaChart>
             </ResponsiveContainer>
           </div>
         </motion.div>
 
-        {/* Project status pie chart */}
+        {/* Projects by phase pie chart */}
         <motion.div {...fadeInUp} className="bg-card rounded-xl border border-border p-5">
-          <h2 className="font-semibold mb-4">Projects by Status</h2>
+          <h2 className="font-semibold mb-4">Projects by Phase</h2>
           <div className="h-48">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
-                  data={projectsByStatus?.filter((s) => s.count > 0) || []}
+                  data={projectsByPhase?.filter((s) => s.count > 0) || []}
                   cx="50%"
                   cy="50%"
                   innerRadius={50}
@@ -200,7 +278,7 @@ function DashboardPage() {
                   paddingAngle={5}
                   dataKey="count"
                 >
-                  {projectsByStatus?.map((_, index) => (
+                  {projectsByPhase?.map((_, index) => (
                     <Cell key={`cell-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} />
                   ))}
                 </Pie>
@@ -215,16 +293,16 @@ function DashboardPage() {
             </ResponsiveContainer>
           </div>
           <div className="grid grid-cols-2 gap-2 mt-2">
-            {projectsByStatus?.slice(0, 4).map((status, i) => (
-              <div key={status.status} className="flex items-center gap-2 text-sm">
+            {projectsByPhase?.slice(0, 4).map((phase, i) => (
+              <div key={phase.phase} className="flex items-center gap-2 text-sm">
                 <div
                   className="w-3 h-3 rounded-full"
                   style={{ backgroundColor: CHART_COLORS[i % CHART_COLORS.length] }}
                 />
-                <span className="text-muted-foreground capitalize">
-                  {status.status.replace('_', ' ')}
+                <span className="text-muted-foreground">
+                  {phaseLabels[phase.phase] || phase.phase.replace('_', ' ')}
                 </span>
-                <span className="font-medium">{status.count}</span>
+                <span className="font-medium">{phase.count}</span>
               </div>
             ))}
           </div>
@@ -233,64 +311,45 @@ function DashboardPage() {
 
       {/* Bottom row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Recent activity */}
-        <motion.div {...fadeInUp} className="bg-card rounded-xl border border-border p-5">
-          <h2 className="font-semibold mb-4">Recent Activity</h2>
-          <div className="space-y-4">
-            {recentActivity?.length === 0 ? (
-              <p className="text-muted-foreground text-sm text-center py-8">No recent activity</p>
-            ) : (
-              recentActivity?.map((activity) => (
-                <div key={activity.id} className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <div className="w-2 h-2 rounded-full bg-primary" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm">
-                      <span className="font-medium">{activity.user?.name || 'System'}</span>{' '}
-                      <span className="text-muted-foreground">{activity.action}</span>
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      {formatRelativeTime(activity.createdAt)}
-                    </p>
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
-        </motion.div>
-
         {/* Upcoming deadlines */}
-        <motion.div {...fadeInUp} className="bg-card rounded-xl border border-border p-5">
-          <h2 className="font-semibold mb-4">Upcoming Deadlines</h2>
+        <motion.div {...fadeInvUp} className="bg-card rounded-xl border border-border p-5">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-semibold">Upcoming Deadlines</h2>
+            <Link
+              to="/dashboard/tasks"
+              className="text-sm text-[#1e3a5f] hover:text-[#1e3a5f]/80"
+            >
+              View all
+            </Link>
+          </div>
           <div className="space-y-3">
-            {!upcomingDeadlines?.milestones?.length &&
-            !upcomingDeadlines?.tasks?.length ? (
+            {!upcomingDeadlines?.tasks?.length && !upcomingDeadlines?.inspections?.length ? (
               <p className="text-muted-foreground text-sm text-center py-8">No upcoming deadlines</p>
             ) : (
               <>
-                {upcomingDeadlines?.milestones?.map((milestone) => (
+                {upcomingDeadlines?.inspections?.map((inspection) => (
                   <div
-                    key={milestone.id}
+                    key={inspection.id}
                     className="flex items-center justify-between p-3 bg-muted/50 rounded-lg"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-lg bg-secondary/10 flex items-center justify-center">
-                        <DollarSign className="w-5 h-5 text-secondary" />
+                      <div className="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center">
+                        <CheckCircle2 className="w-5 h-5 text-purple-500" />
                       </div>
                       <div>
-                        <p className="text-sm font-medium">{milestone.name}</p>
-                        <p className="text-xs text-muted-foreground">{milestone.project.name}</p>
+                        <p className="text-sm font-medium">{inspection.type} Inspection</p>
+                        <p className="text-xs text-muted-foreground">{inspection.project.name}</p>
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="text-sm font-medium">{formatCurrency(milestone.amount || 0)}</p>
-                      <p className="text-xs text-muted-foreground flex items-center justify-end gap-1">
-                        <Clock className="w-3 h-3" />
-                        {milestone.dueDate
-                          ? new Date(milestone.dueDate).toLocaleDateString()
-                          : 'No date'}
-                      </p>
+                      <span className={cn(
+                        'badge text-xs',
+                        new Date(inspection.scheduledDate) < new Date(Date.now() + 2 * 24 * 60 * 60 * 1000)
+                          ? 'bg-red-500/20 text-red-500'
+                          : 'bg-yellow-500/20 text-yellow-500'
+                      )}>
+                        {formatDate(inspection.scheduledDate)}
+                      </span>
                     </div>
                   </div>
                 ))}
@@ -300,8 +359,8 @@ function DashboardPage() {
                     className="flex items-center justify-between p-3 bg-muted/50 rounded-lg"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                        <CheckSquare className="w-5 h-5 text-primary" />
+                      <div className="w-10 h-10 rounded-lg bg-[#1e3a5f]/10 flex items-center justify-center">
+                        <CheckSquare className="w-5 h-5 text-[#1e3a5f]" />
                       </div>
                       <div>
                         <p className="text-sm font-medium">{task.title}</p>
@@ -309,12 +368,14 @@ function DashboardPage() {
                       </div>
                     </div>
                     <div className="text-right">
-                      <span className={cn('badge text-xs', statusColors[task.priority])}>
+                      <span className={cn(
+                        'text-xs px-2 py-1 rounded-full',
+                        statusColors[task.priority]
+                      )}>
                         {task.priority}
                       </span>
-                      <p className="text-xs text-muted-foreground flex items-center justify-end gap-1 mt-1">
-                        <Clock className="w-3 h-3" />
-                        {task.dueDate ? new Date(task.dueDate).toLocaleDateString() : 'No date'}
+                      <p className="text-xs text-muted-foreground mt-1">
+                        {formatDate(task.scheduledDate)}
                       </p>
                     </div>
                   </div>
@@ -323,7 +384,95 @@ function DashboardPage() {
             )}
           </div>
         </motion.div>
+
+        {/* Active projects quick view */}
+        <motion.div {...fadeInUp} className="bg-card rounded-xl border border-border p-5">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-semibold">Active Projects</h2>
+            <Link
+              to="/dashboard/projects"
+              className="text-sm text-[#1e3a5f] hover:text-[#1e3a5f]/80"
+            >
+              View all
+            </Link>
+          </div>
+          <div className="space-y-3">
+            {!stats?.recentActiveProjects?.length ? (
+              <p className="text-muted-foreground text-sm text-center py-8">No active projects</p>
+            ) : (
+              stats.recentActiveProjects.map((project) => (
+                <Link
+                  key={project.id}
+                  to="/dashboard/projects/$projectId"
+                  params={{ projectId: project.id }}
+                  className="flex items-center justify-between p-3 bg-muted/50 rounded-lg hover:bg-muted transition-colors"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-lg bg-[#1e3a5f]/10 flex items-center justify-center">
+                      <Home className="w-5 h-5 text-[#1e3a5f]" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium">{project.name}</p>
+                      <p className="text-xs text-muted-foreground flex items-center gap-1">
+                        <MapPin className="w-3 h-3" />
+                        {project.address}, {project.city}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <span className={cn(
+                      'text-xs px-2 py-1 rounded-full',
+                      statusColors[project.currentPhase]
+                    )}>
+                      {phaseLabels[project.currentPhase] || project.currentPhase}
+                    </span>
+                    {project.hasRisk && (
+                      <div className="flex items-center justify-end gap-1 mt-1">
+                        <AlertTriangle className="w-3 h-3 text-red-500" />
+                        <span className="text-xs text-red-500">Risk</span>
+                      </div>
+                    )}
+                  </div>
+                </Link>
+              ))
+            )}
+          </div>
+        </motion.div>
       </div>
+
+      {/* Recent activity */}
+      <motion.div {...fadeInUp} className="bg-card rounded-xl border border-border p-5">
+        <h2 className="font-semibold mb-4">Recent Activity</h2>
+        <div className="space-y-4">
+          {recentActivity?.length === 0 ? (
+            <p className="text-muted-foreground text-sm text-center py-8">No recent activity</p>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {recentActivity?.slice(0, 6).map((activity) => (
+                <div key={activity.id} className="flex items-start gap-3 p-3 bg-muted/30 rounded-lg">
+                  <div className="w-8 h-8 rounded-full bg-[#1e3a5f]/10 flex items-center justify-center flex-shrink-0">
+                    <div className="w-2 h-2 rounded-full bg-[#1e3a5f]" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm">
+                      <span className="font-medium">{activity.user?.name || 'System'}</span>{' '}
+                      <span className="text-muted-foreground">{activity.action}</span>
+                    </p>
+                    {activity.project && (
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        {activity.project.name}
+                      </p>
+                    )}
+                    <p className="text-xs text-muted-foreground">
+                      {formatRelativeTime(activity.createdAt)}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </motion.div>
     </div>
   );
 }

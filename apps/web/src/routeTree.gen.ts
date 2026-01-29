@@ -14,6 +14,12 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
 import { Route as AuthRegisterRouteImport } from './routes/auth/register'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
+import { Route as DashboardSubcontractorsIndexRouteImport } from './routes/dashboard/subcontractors/index'
+import { Route as DashboardProjectsIndexRouteImport } from './routes/dashboard/projects/index'
+import { Route as DashboardHomeownersIndexRouteImport } from './routes/dashboard/homeowners/index'
+import { Route as DashboardCommunicationsIndexRouteImport } from './routes/dashboard/communications/index'
+import { Route as DashboardClientsIndexRouteImport } from './routes/dashboard/clients/index'
+import { Route as DashboardClientsClientIdRouteImport } from './routes/dashboard/clients/$clientId'
 
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
@@ -40,6 +46,40 @@ const AuthLoginRoute = AuthLoginRouteImport.update({
   path: '/auth/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardSubcontractorsIndexRoute =
+  DashboardSubcontractorsIndexRouteImport.update({
+    id: '/subcontractors/',
+    path: '/subcontractors/',
+    getParentRoute: () => DashboardRoute,
+  } as any)
+const DashboardProjectsIndexRoute = DashboardProjectsIndexRouteImport.update({
+  id: '/projects/',
+  path: '/projects/',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardHomeownersIndexRoute =
+  DashboardHomeownersIndexRouteImport.update({
+    id: '/homeowners/',
+    path: '/homeowners/',
+    getParentRoute: () => DashboardRoute,
+  } as any)
+const DashboardCommunicationsIndexRoute =
+  DashboardCommunicationsIndexRouteImport.update({
+    id: '/communications/',
+    path: '/communications/',
+    getParentRoute: () => DashboardRoute,
+  } as any)
+const DashboardClientsIndexRoute = DashboardClientsIndexRouteImport.update({
+  id: '/clients/',
+  path: '/clients/',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardClientsClientIdRoute =
+  DashboardClientsClientIdRouteImport.update({
+    id: '/clients/$clientId',
+    path: '/clients/$clientId',
+    getParentRoute: () => DashboardRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -47,12 +87,24 @@ export interface FileRoutesByFullPath {
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
   '/dashboard/': typeof DashboardIndexRoute
+  '/dashboard/clients/$clientId': typeof DashboardClientsClientIdRoute
+  '/dashboard/clients/': typeof DashboardClientsIndexRoute
+  '/dashboard/communications/': typeof DashboardCommunicationsIndexRoute
+  '/dashboard/homeowners/': typeof DashboardHomeownersIndexRoute
+  '/dashboard/projects/': typeof DashboardProjectsIndexRoute
+  '/dashboard/subcontractors/': typeof DashboardSubcontractorsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
   '/dashboard': typeof DashboardIndexRoute
+  '/dashboard/clients/$clientId': typeof DashboardClientsClientIdRoute
+  '/dashboard/clients': typeof DashboardClientsIndexRoute
+  '/dashboard/communications': typeof DashboardCommunicationsIndexRoute
+  '/dashboard/homeowners': typeof DashboardHomeownersIndexRoute
+  '/dashboard/projects': typeof DashboardProjectsIndexRoute
+  '/dashboard/subcontractors': typeof DashboardSubcontractorsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -61,6 +113,12 @@ export interface FileRoutesById {
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
   '/dashboard/': typeof DashboardIndexRoute
+  '/dashboard/clients/$clientId': typeof DashboardClientsClientIdRoute
+  '/dashboard/clients/': typeof DashboardClientsIndexRoute
+  '/dashboard/communications/': typeof DashboardCommunicationsIndexRoute
+  '/dashboard/homeowners/': typeof DashboardHomeownersIndexRoute
+  '/dashboard/projects/': typeof DashboardProjectsIndexRoute
+  '/dashboard/subcontractors/': typeof DashboardSubcontractorsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -70,8 +128,24 @@ export interface FileRouteTypes {
     | '/auth/login'
     | '/auth/register'
     | '/dashboard/'
+    | '/dashboard/clients/$clientId'
+    | '/dashboard/clients/'
+    | '/dashboard/communications/'
+    | '/dashboard/homeowners/'
+    | '/dashboard/projects/'
+    | '/dashboard/subcontractors/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth/login' | '/auth/register' | '/dashboard'
+  to:
+    | '/'
+    | '/auth/login'
+    | '/auth/register'
+    | '/dashboard'
+    | '/dashboard/clients/$clientId'
+    | '/dashboard/clients'
+    | '/dashboard/communications'
+    | '/dashboard/homeowners'
+    | '/dashboard/projects'
+    | '/dashboard/subcontractors'
   id:
     | '__root__'
     | '/'
@@ -79,6 +153,12 @@ export interface FileRouteTypes {
     | '/auth/login'
     | '/auth/register'
     | '/dashboard/'
+    | '/dashboard/clients/$clientId'
+    | '/dashboard/clients/'
+    | '/dashboard/communications/'
+    | '/dashboard/homeowners/'
+    | '/dashboard/projects/'
+    | '/dashboard/subcontractors/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -125,15 +205,69 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard/subcontractors/': {
+      id: '/dashboard/subcontractors/'
+      path: '/subcontractors'
+      fullPath: '/dashboard/subcontractors/'
+      preLoaderRoute: typeof DashboardSubcontractorsIndexRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/projects/': {
+      id: '/dashboard/projects/'
+      path: '/projects'
+      fullPath: '/dashboard/projects/'
+      preLoaderRoute: typeof DashboardProjectsIndexRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/homeowners/': {
+      id: '/dashboard/homeowners/'
+      path: '/homeowners'
+      fullPath: '/dashboard/homeowners/'
+      preLoaderRoute: typeof DashboardHomeownersIndexRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/communications/': {
+      id: '/dashboard/communications/'
+      path: '/communications'
+      fullPath: '/dashboard/communications/'
+      preLoaderRoute: typeof DashboardCommunicationsIndexRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/clients/': {
+      id: '/dashboard/clients/'
+      path: '/clients'
+      fullPath: '/dashboard/clients/'
+      preLoaderRoute: typeof DashboardClientsIndexRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/clients/$clientId': {
+      id: '/dashboard/clients/$clientId'
+      path: '/clients/$clientId'
+      fullPath: '/dashboard/clients/$clientId'
+      preLoaderRoute: typeof DashboardClientsClientIdRouteImport
+      parentRoute: typeof DashboardRoute
+    }
   }
 }
 
 interface DashboardRouteChildren {
   DashboardIndexRoute: typeof DashboardIndexRoute
+  DashboardClientsClientIdRoute: typeof DashboardClientsClientIdRoute
+  DashboardClientsIndexRoute: typeof DashboardClientsIndexRoute
+  DashboardCommunicationsIndexRoute: typeof DashboardCommunicationsIndexRoute
+  DashboardHomeownersIndexRoute: typeof DashboardHomeownersIndexRoute
+  DashboardProjectsIndexRoute: typeof DashboardProjectsIndexRoute
+  DashboardSubcontractorsIndexRoute: typeof DashboardSubcontractorsIndexRoute
 }
 
 const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardIndexRoute: DashboardIndexRoute,
+  DashboardClientsClientIdRoute: DashboardClientsClientIdRoute,
+  DashboardClientsIndexRoute: DashboardClientsIndexRoute,
+  DashboardCommunicationsIndexRoute: DashboardCommunicationsIndexRoute,
+  DashboardHomeownersIndexRoute: DashboardHomeownersIndexRoute,
+  DashboardProjectsIndexRoute: DashboardProjectsIndexRoute,
+  DashboardSubcontractorsIndexRoute: DashboardSubcontractorsIndexRoute,
 }
 
 const DashboardRouteWithChildren = DashboardRoute._addFileChildren(

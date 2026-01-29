@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { router, protectedProcedure } from '../trpc.js';
 import { taskCreateSchema, taskUpdateSchema, paginationSchema } from '@enterprise/shared';
 import { tasks, projects } from '@enterprise/db/schema';
-import { eq, and, desc, inArray } from '@enterprise/db';
+import { eq, and, desc, inArray, ilike, or } from '@enterprise/db';
 
 export const tasksRouter = router({
   // List tasks (optionally filtered by project)
@@ -12,16 +12,29 @@ export const tasksRouter = router({
       paginationSchema
         .extend({
           projectId: z.string().uuid().optional(),
-          milestoneId: z.string().uuid().optional(),
+          projectPhaseId: z.string().uuid().optional(),
           assigneeId: z.string().uuid().optional(),
-          status: z.enum(['backlog', 'todo', 'in_progress', 'in_review', 'done']).optional(),
-          priority: z.enum(['low', 'medium', 'high', 'urgent']).optional(),
+          assignedSubcontractorId: z.string().uuid().optional(),
+          tradeId: z.string().uuid().optional(),
+          status: z.enum(['pending', 'scheduled', 'in_progress', 'inspection', 'completed', 'blocked']).optional(),
+          priority: z.enum(['low', 'normal', 'urgent', 'critical']).optional(),
+          search: z.string().optional(),
         })
         .optional()
     )
     .query(async ({ ctx, input }) => {
-      const { page = 1, pageSize = 50, projectId, milestoneId, assigneeId, status, priority } =
-        input || {};
+      const {
+        page = 1,
+        pageSize = 50,
+        projectId,
+        projectPhaseId,
+        assigneeId,
+        assignedSubcontractorId,
+        tradeId,
+        status,
+        priority,
+        search,
+      } = input || {};
       const offset = (page - 1) * pageSize;
 
       // Get project IDs for this tenant
@@ -48,13 +61,23 @@ export const tasksRouter = router({
         if (combined) whereClause = combined;
       }
 
-      if (milestoneId) {
-        const combined = and(whereClause, eq(tasks.milestoneId, milestoneId));
+      if (projectPhaseId) {
+        const combined = and(whereClause, eq(tasks.projectPhaseId, projectPhaseId));
         if (combined) whereClause = combined;
       }
 
       if (assigneeId) {
         const combined = and(whereClause, eq(tasks.assigneeId, assigneeId));
+        if (combined) whereClause = combined;
+      }
+
+      if (assignedSubcontractorId) {
+        const combined = and(whereClause, eq(tasks.assignedSubcontractorId, assignedSubcontractorId));
+        if (combined) whereClause = combined;
+      }
+
+      if (tradeId) {
+        const combined = and(whereClause, eq(tasks.tradeId, tradeId));
         if (combined) whereClause = combined;
       }
 
@@ -68,9 +91,21 @@ export const tasksRouter = router({
         if (combined) whereClause = combined;
       }
 
+      if (search) {
+        const combined = and(
+          whereClause,
+          or(
+            ilike(tasks.title, `%${search}%`),
+            ilike(tasks.description || '', `%${search}%`),
+            ilike(tasks.poNumber || '', `%${search}%`)
+          )
+        );
+        if (combined) whereClause = combined;
+      }
+
       const taskList = await ctx.db.query.tasks.findMany({
         where: whereClause,
-        orderBy: [tasks.sortOrder, desc(tasks.createdAt)],
+        orderBy: [desc(tasks.priority), desc(tasks.scheduledDate), desc(tasks.createdAt)],
         limit: pageSize,
         offset,
         with: {
@@ -81,23 +116,50 @@ export const tasksRouter = router({
               avatar: true,
             },
           },
+          assignedSubcontractor: {
+            columns: {
+              id: true,
+              companyName: true,
+            },
+          },
           project: {
             columns: {
               id: true,
               name: true,
             },
           },
+          trade: {
+            columns: {
+              id: true,
+              name: true,
+              category: true,
+            },
+          },
+          projectPhase: {
+            columns: {
+              id: true,
+              phase: true,
+            },
+          },
         },
       });
 
-      const total = await ctx.db.select({ count: tasks.id }).from(tasks).where(whereClause);
+      // Count total
+      const [countResult] = await ctx.db
+        .select({ count: sql<number>`count(*)::int` })
+        .from(tasks)
+        .where(whereClause);
+
+      const total = countResult?.count || 0;
 
       return {
         items: taskList,
-        total: total.length,
-        page,
-        pageSize,
-        totalPages: Math.ceil(total.length / pageSize),
+        pagination: {
+          total,
+          page,
+          pageSize,
+          totalPages: Math.ceil(total / pageSize),
+        },
       };
     }),
 
@@ -114,6 +176,15 @@ export const tasksRouter = router({
             email: true,
           },
         },
+        assignedSubcontractor: {
+          columns: {
+            id: true,
+            companyName: true,
+            contactName: true,
+            contactEmail: true,
+            contactPhone: true,
+          },
+        },
         project: {
           columns: {
             id: true,
@@ -121,10 +192,17 @@ export const tasksRouter = router({
             tenantId: true,
           },
         },
-        milestone: {
+        trade: {
           columns: {
             id: true,
             name: true,
+            category: true,
+          },
+        },
+        projectPhase: {
+          columns: {
+            id: true,
+            phase: true,
           },
         },
       },
@@ -165,7 +243,9 @@ export const tasksRouter = router({
       .insert(tasks)
       .values({
         ...input,
+        status: 'pending',
         sortOrder: (maxSort?.sortOrder || 0) + 1,
+        actualCost: '0',
       })
       .returning();
 
@@ -205,9 +285,9 @@ export const tasksRouter = router({
       };
 
       // If completing, set completedAt
-      if (data.status === 'done' && existing.status !== 'done') {
+      if (data.status === 'completed' && existing.status !== 'completed') {
         updateData.completedAt = new Date();
-      } else if (data.status && data.status !== 'done') {
+      } else if (data.status && data.status !== 'completed') {
         updateData.completedAt = null;
       }
 
@@ -225,7 +305,7 @@ export const tasksRouter = router({
     .input(
       z.object({
         taskIds: z.array(z.string().uuid()),
-        status: z.enum(['backlog', 'todo', 'in_progress', 'in_review', 'done']),
+        status: z.enum(['pending', 'scheduled', 'in_progress', 'inspection', 'completed', 'blocked']),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -257,7 +337,7 @@ export const tasksRouter = router({
         updatedAt: new Date(),
       };
 
-      if (status === 'done') {
+      if (status === 'completed') {
         updateData.completedAt = new Date();
       }
 
@@ -325,4 +405,59 @@ export const tasksRouter = router({
 
       return { success: true };
     }),
+
+  // Mark inspection status
+  updateInspection: protectedProcedure
+    .input(
+      z.object({
+        id: z.string().uuid(),
+        inspectionStatus: z.enum(['scheduled', 'passed', 'failed']),
+        inspectionDate: z.coerce.date().optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { id, inspectionStatus, inspectionDate } = input;
+
+      const existing = await ctx.db.query.tasks.findFirst({
+        where: eq(tasks.id, id),
+        with: {
+          project: {
+            columns: { tenantId: true },
+          },
+        },
+      });
+
+      if (!existing || existing.project.tenantId !== ctx.tenant.id) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Task not found',
+        });
+      }
+
+      const updateData: Record<string, unknown> = {
+        inspectionStatus,
+        updatedAt: new Date(),
+      };
+
+      if (inspectionDate) {
+        updateData.inspectionDate = inspectionDate;
+      }
+
+      // If passed, mark task as completed
+      if (inspectionStatus === 'passed') {
+        updateData.status = 'completed';
+        updateData.completedAt = new Date();
+      }
+
+      const [updated] = await ctx.db
+        .update(tasks)
+        .set(updateData)
+        .where(eq(tasks.id, id))
+        .returning();
+
+      return updated;
+    }),
 });
+
+// Import sql for count
+import { sql } from '@enterprise/db';

@@ -4,6 +4,8 @@ import {
   Users,
   FolderKanban,
   CheckSquare,
+  Phone,
+  Wrench,
   CreditCard,
   Settings,
   LogOut,
@@ -12,7 +14,8 @@ import {
   Bell,
   Search,
   ChevronDown,
-  Code2,
+  Home,
+  HardHat,
 } from 'lucide-react';
 import { useState } from 'react';
 import { trpc } from '@/lib/trpc';
@@ -24,9 +27,11 @@ export const Route = createFileRoute('/dashboard')({
 
 const navItems = [
   { to: '/dashboard', icon: LayoutDashboard, label: 'Dashboard', exact: true },
-  { to: '/dashboard/clients', icon: Users, label: 'Clients' },
+  { to: '/dashboard/homeowners', icon: Users, label: 'Homeowners' },
   { to: '/dashboard/projects', icon: FolderKanban, label: 'Projects' },
   { to: '/dashboard/tasks', icon: CheckSquare, label: 'Tasks' },
+  { to: '/dashboard/subcontractors', icon: HardHat, label: 'Subcontractors' },
+  { to: '/dashboard/communications', icon: Phone, label: 'Communications' },
   { to: '/dashboard/billing', icon: CreditCard, label: 'Billing' },
   { to: '/dashboard/settings', icon: Settings, label: 'Settings' },
 ];
@@ -62,10 +67,10 @@ function DashboardLayout() {
         {/* Logo */}
         <div className="flex items-center justify-between h-16 px-4 border-b border-border">
           <Link to="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-primary flex items-center justify-center">
-              <Code2 className="w-5 h-5 text-white" />
+            <div className="w-8 h-8 rounded-lg bg-[#1e3a5f] flex items-center justify-center">
+              <Home className="w-5 h-5 text-white" />
             </div>
-            <span className="font-bold">Enterprise</span>
+            <span className="font-bold text-[#1e3a5f]">Villa Homes</span>
           </Link>
           <button
             onClick={() => setSidebarOpen(false)}
@@ -79,15 +84,15 @@ function DashboardLayout() {
         <div className="p-4 border-b border-border">
           <button className="w-full flex items-center justify-between p-2 rounded-lg hover:bg-card-hover transition-colors">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-gradient-primary/20 flex items-center justify-center text-primary font-semibold text-sm">
-                {session?.tenant?.name?.[0] || 'W'}
+              <div className="w-8 h-8 rounded-lg bg-[#1e3a5f]/20 flex items-center justify-center text-[#1e3a5f] font-semibold text-sm">
+                <HardHat className="w-4 h-4" />
               </div>
               <div className="text-left">
                 <div className="text-sm font-medium truncate max-w-32">
-                  {session?.tenant?.name || 'Workspace'}
+                  {session?.tenant?.name || 'Villa Homes'}
                 </div>
                 <div className="text-xs text-muted-foreground">
-                  {session?.tenant?.plan || 'Free'} plan
+                  General Contractor
                 </div>
               </div>
             </div>
@@ -109,7 +114,7 @@ function DashboardLayout() {
                 className={cn(
                   'flex items-center gap-3 px-3 py-2 rounded-lg transition-colors',
                   isActive
-                    ? 'bg-primary/10 text-primary'
+                    ? 'bg-[#1e3a5f]/10 text-[#1e3a5f]'
                     : 'text-muted-foreground hover:bg-card-hover hover:text-foreground'
                 )}
               >
@@ -123,7 +128,7 @@ function DashboardLayout() {
         {/* User section */}
         <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-border">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-full bg-gradient-primary flex items-center justify-center text-white font-semibold">
+            <div className="w-10 h-10 rounded-full bg-[#1e3a5f] flex items-center justify-center text-white font-semibold">
               {session?.user?.name ? getInitials(session.user.name) : '?'}
             </div>
             <div className="flex-1 min-w-0">
@@ -131,7 +136,7 @@ function DashboardLayout() {
                 {session?.user?.name || 'User'}
               </div>
               <div className="text-xs text-muted-foreground truncate">
-                {session?.user?.email || 'user@example.com'}
+                {session?.user?.email || 'user@villahomes.com'}
               </div>
             </div>
           </div>
@@ -164,8 +169,8 @@ function DashboardLayout() {
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <input
                   type="text"
-                  placeholder="Search..."
-                  className="w-full pl-10 pr-4 py-2 bg-card border border-border rounded-lg text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                  placeholder="Search projects, homeowners, subs..."
+                  className="w-full pl-10 pr-4 py-2 bg-card border border-border rounded-lg text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[#1e3a5f]/50"
                 />
               </div>
             </div>
@@ -174,7 +179,7 @@ function DashboardLayout() {
             <div className="flex items-center gap-2">
               <button className="relative p-2 text-muted-foreground hover:text-foreground hover:bg-card rounded-lg transition-colors">
                 <Bell className="w-5 h-5" />
-                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-destructive rounded-full" />
+                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#e85d04] rounded-full" />
               </button>
             </div>
           </div>
