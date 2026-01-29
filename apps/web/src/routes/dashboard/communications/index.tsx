@@ -399,14 +399,14 @@ function CommunicationsPage() {
                             </p>
                           </div>
                         )}
-                        {comm.actionItems && Array.isArray(comm.actionItems) && (comm.actionItems as unknown[]).length > 0 && (
+                        {comm.actionItems && Array.isArray(comm.actionItems) && (comm.actionItems as string[]).length > 0 && (
                           <div>
                             <h4 className="text-sm font-medium mb-2">Action Items</h4>
                             <ul className="space-y-1">
-                              {(comm.actionItems as unknown[]).map((item, idx) => (
+                              {(comm.actionItems as string[]).map((item: string, idx: number) => (
                                 <li key={idx} className="flex items-center gap-2 text-sm">
                                   <span className="w-1.5 h-1.5 rounded-full bg-[#1e3a5f]" />
-                                  <span>{String(item)}</span>
+                                  <span>{item}</span>
                                 </li>
                               ))}
                             </ul>

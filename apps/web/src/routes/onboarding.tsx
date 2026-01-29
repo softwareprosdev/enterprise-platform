@@ -19,7 +19,7 @@ function OnboardingPage() {
   const updateBilling = trpc.onboarding.updateBilling.useMutation();
   const skipToComplete = trpc.onboarding.skipToStep.useMutation();
 
-  const steps = useMemo(() => data?.steps ?? ['company', 'team', 'branding', 'integrations', 'billing', 'complete'], [data]);
+  const steps = useMemo(() => (data?.steps ?? ['company', 'team', 'branding', 'integrations', 'billing', 'complete']) as string[], [data]);
   const [currentStep, setCurrentStep] = useState<string>('company');
 
   const [company, setCompany] = useState({
