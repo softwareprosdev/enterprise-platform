@@ -1,10 +1,8 @@
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
 import { useForm } from '@tanstack/react-form';
-import { zodValidator } from '@tanstack/zod-form-adapter';
 import { motion } from 'framer-motion';
-import { Code2, Eye, EyeOff, Loader2, Github } from 'lucide-react';
+import { HardHat, Eye, EyeOff, Loader2, Github } from 'lucide-react';
 import { useState } from 'react';
-import { loginSchema } from '@enterprise/shared';
 import { trpc } from '@/lib/trpc';
 import { cn } from '@/lib/utils';
 
@@ -21,7 +19,7 @@ function LoginPage() {
     onSuccess: (data) => {
       if (data.requiresMfa) {
         // Navigate to MFA verification
-        navigate({ to: '/auth/mfa', search: { token: data.mfaToken } });
+        navigate({ to: '/auth/mfa', search: { token: data.mfaToken || '' } });
       } else {
         // Navigate to dashboard
         navigate({ to: '/dashboard' });
@@ -36,10 +34,6 @@ function LoginPage() {
     defaultValues: {
       email: '',
       password: '',
-    },
-    validatorAdapter: zodValidator(),
-    validators: {
-      onChange: loginSchema,
     },
     onSubmit: async ({ value }) => {
       setError(null);
@@ -60,9 +54,9 @@ function LoginPage() {
         {/* Logo */}
         <Link to="/" className="flex items-center justify-center gap-2 mb-8">
           <div className="w-10 h-10 rounded-lg bg-gradient-primary flex items-center justify-center">
-            <Code2 className="w-6 h-6 text-white" />
+            <HardHat className="w-6 h-6 text-white" />
           </div>
-          <span className="font-bold text-xl">Enterprise</span>
+          <span className="font-bold text-xl">Villa Homes</span>
         </Link>
 
         {/* Card */}
@@ -107,7 +101,7 @@ function LoginPage() {
                     <p className="text-destructive text-sm mt-1">
                       {typeof field.state.meta.errors[0] === 'string'
                         ? field.state.meta.errors[0]
-                        : field.state.meta.errors[0]?.message || 'Invalid value'}
+                        : field.state.meta?.errors?.[0] || 'Invalid value'}
                     </p>
                   )}
                 </div>
@@ -156,7 +150,7 @@ function LoginPage() {
                     <p className="text-destructive text-sm mt-1">
                       {typeof field.state.meta.errors[0] === 'string'
                         ? field.state.meta.errors[0]
-                        : field.state.meta.errors[0]?.message || 'Invalid value'}
+                        : field.state.meta?.errors?.[0] || 'Invalid value'}
                     </p>
                   )}
                 </div>

@@ -4,8 +4,14 @@ import { randomBytes } from 'node:crypto';
 import { hash, verify } from '@node-rs/argon2';
 import { generateId } from '@enterprise/shared';
 import { router, publicProcedure, protectedProcedure } from '../trpc.js';
-import { loginSchema, registerSchema, mfaVerifySchema } from '@enterprise/shared';
-import { users, sessions, tenants } from '@enterprise/db/schema';
+import {
+  loginSchema,
+  registerSchema,
+  mfaVerifySchema,
+  passwordResetRequestSchema,
+  passwordResetSchema,
+} from '@enterprise/shared';
+import { users, sessions, tenants, verificationTokens } from '@enterprise/db/schema';
 import { eq } from '@enterprise/db';
 import { sessionStore } from '../../lib/redis.js';
 import { createTOTPKeyURI, TOTPController } from 'oslo/otp';
@@ -107,6 +113,62 @@ export const authRouter = router({
       },
     };
   }),
+
+  // Request password reset
+  requestPasswordReset: publicProcedure
+    .input(passwordResetRequestSchema)
+    .mutation(async ({ ctx, input }) => {
+      const user = await ctx.db.query.users.findFirst({
+        where: eq(users.email, input.email.toLowerCase()),
+      });
+
+      if (!user) {
+        return { success: true };
+      }
+
+      const resetToken = generateId(32);
+      const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+
+      await ctx.db.insert(verificationTokens).values({
+        userId: user.id,
+        token: resetToken,
+        type: 'password_reset',
+        expiresAt,
+      });
+
+      // TODO: send email. For demo, return token.
+      return { success: true, resetToken };
+    }),
+
+  // Reset password with token
+  resetPassword: publicProcedure
+    .input(passwordResetSchema)
+    .mutation(async ({ ctx, input }) => {
+      const tokenRecord = await ctx.db.query.verificationTokens.findFirst({
+        where: eq(verificationTokens.token, input.token),
+      });
+
+      if (!tokenRecord || tokenRecord.type !== 'password_reset') {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Invalid reset token',
+        });
+      }
+
+      if (tokenRecord.expiresAt < new Date()) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Reset token expired',
+        });
+      }
+
+      const passwordHash = await hash(input.password, HASH_OPTIONS);
+
+      await ctx.db.update(users).set({ passwordHash }).where(eq(users.id, tokenRecord.userId));
+      await ctx.db.delete(verificationTokens).where(eq(verificationTokens.id, tokenRecord.id));
+
+      return { success: true };
+    }),
 
   // Register new user and tenant
   register: publicProcedure.input(registerSchema).mutation(async ({ ctx, input }) => {

@@ -6,17 +6,24 @@ import {
   Phone,
   Globe,
   Calendar,
-  DollarSign,
-  TrendingUp,
-  AlertCircle,
-  CheckCircle2,
-  Clock,
+  Briefcase,
+  FolderKanban,
+  FileText,
   Edit,
   Trash2,
   Plus,
 } from 'lucide-react';
 import { trpc } from '@/lib/trpc';
 import { cn, statusColors, formatDate, formatCurrency } from '@/lib/utils';
+
+function getInitials(name: string): string {
+  return name
+    .split(' ')
+    .map((n) => n[0])
+    .join('')
+    .toUpperCase()
+    .slice(0, 2);
+}
 
 export const Route = createFileRoute('/dashboard/clients/$clientId')({
   component: ClientDetailPage,
@@ -31,7 +38,6 @@ function ClientDetailPage() {
 
   const { data: client, isLoading, error } = trpc.clients.get.useQuery({ id: clientId });
 
-  const utils = trpc.useUtils();
   const deleteMutation = trpc.clients.delete.useMutation({
     onSuccess: () => {
       navigate({ to: '/dashboard/clients' });
@@ -227,7 +233,7 @@ function ClientDetailPage() {
                         <div>
                           <div className="font-medium">{project.name}</div>
                           <div className="text-sm text-muted-foreground">
-                            {project.budget && formatCurrency(project.budget)}
+                            {project.contractAmount && formatCurrency(Number(project.contractAmount))}
                           </div>
                         </div>
                       </div>
@@ -264,14 +270,14 @@ function ClientDetailPage() {
                 <div className="flex items-center justify-between">
                   <span className="text-muted-foreground">Active Projects</span>
                   <span className="font-semibold">
-                    {client.projects?.filter((p) => p.status === 'in_progress').length ?? 0}
+                    {client.projects?.filter((p) => p.status === 'active').length ?? 0}
                   </span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-muted-foreground">Total Revenue</span>
                   <span className="font-semibold">
                     {formatCurrency(
-                      client.projects?.reduce((sum, p) => sum + (Number(p.budget) || 0), 0) ?? 0
+                      client.projects?.reduce((sum, p) => sum + (Number(p.contractAmount) || 0), 0) ?? 0
                     )}
                   </span>
                 </div>
@@ -335,9 +341,9 @@ function ClientDetailPage() {
                     >
                       {project.status.replace('_', ' ')}
                     </span>
-                    {project.budget && (
+                    {project.contractAmount && (
                       <span className="text-sm font-medium">
-                        {formatCurrency(project.budget)}
+                        {formatCurrency(Number(project.contractAmount))}
                       </span>
                     )}
                   </div>
@@ -460,7 +466,7 @@ function EditClientModal({ client, onClose }: { client: Client; onClose: () => v
     e.preventDefault();
     updateMutation.mutate({
       id: client.id,
-      ...formData,
+      data: formData,
     });
   };
 

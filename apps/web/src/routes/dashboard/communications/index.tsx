@@ -399,7 +399,7 @@ function CommunicationsPage() {
                             </p>
                           </div>
                         )}
-                        {comm.actionItems && Array.isArray(comm.actionItems) && comm.actionItems.length > 0 && (
+                        {comm.actionItems && Array.isArray(comm.actionItems) && (comm.actionItems as string[]).length > 0 && (
                           <div>
                             <h4 className="text-sm font-medium mb-2">Action Items</h4>
                             <ul className="space-y-1">

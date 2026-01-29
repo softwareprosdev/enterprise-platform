@@ -8,7 +8,6 @@ import {
   Building2,
   Mail,
   Phone,
-  Globe,
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react';
@@ -193,7 +192,7 @@ function ClientsPage() {
                     {/* Projects count */}
                     <div className="col-span-2 mb-3 md:mb-0">
                       <span className="text-sm">
-                        {client.projectCount ?? 0} project{(client.projectCount ?? 0) !== 1 ? 's' : ''}
+                        0 projects
                       </span>
                     </div>
 

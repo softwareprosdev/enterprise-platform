@@ -426,9 +426,9 @@ function LandingPage() {
               <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
                 Join builders using Villa Homes to deliver on schedule, protect margins, and delight homeowners.
               </p>
-              <Link to="/auth/register" className="btn-primary text-lg !py-4 !px-8 glow">
+              <Link to="/auth/register" className="btn-primary text-lg !py-4 !px-8 glow inline-flex items-center justify-center">
                 Start Your Builder Trial — No Credit Card Needed
-                <ArrowRight className="ml-2 w-5 h-5" />
+                <ArrowRight className="ml-2 w-5 h-5 inline-block" />
               </Link>
             </div>
           </motion.div>

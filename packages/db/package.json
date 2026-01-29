@@ -18,6 +18,7 @@
     "studio": "drizzle-kit studio",
     "seed": "tsx src/seed.ts",
     "seed:prod": "tsx src/seed-production.ts",
+    "seed:demo": "tsx src/seed-demo-rgv.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

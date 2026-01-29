@@ -9,20 +9,29 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
 import { Route as DashboardTasksRouteImport } from './routes/dashboard/tasks'
 import { Route as AuthRegisterRouteImport } from './routes/auth/register'
+import { Route as AuthMfaRouteImport } from './routes/auth/mfa'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
+import { Route as AuthForgotPasswordRouteImport } from './routes/auth/forgot-password'
 import { Route as DashboardSubcontractorsIndexRouteImport } from './routes/dashboard/subcontractors/index'
 import { Route as DashboardProjectsIndexRouteImport } from './routes/dashboard/projects/index'
 import { Route as DashboardHomeownersIndexRouteImport } from './routes/dashboard/homeowners/index'
 import { Route as DashboardCommunicationsIndexRouteImport } from './routes/dashboard/communications/index'
 import { Route as DashboardClientsIndexRouteImport } from './routes/dashboard/clients/index'
 import { Route as DashboardProjectsProjectIdRouteImport } from './routes/dashboard/projects/$projectId'
+import { Route as DashboardHomeownersHomeownerIdRouteImport } from './routes/dashboard/homeowners/$homeownerId'
 import { Route as DashboardClientsClientIdRouteImport } from './routes/dashboard/clients/$clientId'
 
+const OnboardingRoute = OnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -48,9 +57,19 @@ const AuthRegisterRoute = AuthRegisterRouteImport.update({
   path: '/auth/register',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthMfaRoute = AuthMfaRouteImport.update({
+  id: '/auth/mfa',
+  path: '/auth/mfa',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthLoginRoute = AuthLoginRouteImport.update({
   id: '/auth/login',
   path: '/auth/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthForgotPasswordRoute = AuthForgotPasswordRouteImport.update({
+  id: '/auth/forgot-password',
+  path: '/auth/forgot-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardSubcontractorsIndexRoute =
@@ -87,6 +106,12 @@ const DashboardProjectsProjectIdRoute =
     path: '/projects/$projectId',
     getParentRoute: () => DashboardRoute,
   } as any)
+const DashboardHomeownersHomeownerIdRoute =
+  DashboardHomeownersHomeownerIdRouteImport.update({
+    id: '/homeowners/$homeownerId',
+    path: '/homeowners/$homeownerId',
+    getParentRoute: () => DashboardRoute,
+  } as any)
 const DashboardClientsClientIdRoute =
   DashboardClientsClientIdRouteImport.update({
     id: '/clients/$clientId',
@@ -97,11 +122,15 @@ const DashboardClientsClientIdRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRouteWithChildren
+  '/onboarding': typeof OnboardingRoute
+  '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
+  '/auth/mfa': typeof AuthMfaRoute
   '/auth/register': typeof AuthRegisterRoute
   '/dashboard/tasks': typeof DashboardTasksRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/dashboard/clients/$clientId': typeof DashboardClientsClientIdRoute
+  '/dashboard/homeowners/$homeownerId': typeof DashboardHomeownersHomeownerIdRoute
   '/dashboard/projects/$projectId': typeof DashboardProjectsProjectIdRoute
   '/dashboard/clients/': typeof DashboardClientsIndexRoute
   '/dashboard/communications/': typeof DashboardCommunicationsIndexRoute
@@ -111,11 +140,15 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/onboarding': typeof OnboardingRoute
+  '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
+  '/auth/mfa': typeof AuthMfaRoute
   '/auth/register': typeof AuthRegisterRoute
   '/dashboard/tasks': typeof DashboardTasksRoute
   '/dashboard': typeof DashboardIndexRoute
   '/dashboard/clients/$clientId': typeof DashboardClientsClientIdRoute
+  '/dashboard/homeowners/$homeownerId': typeof DashboardHomeownersHomeownerIdRoute
   '/dashboard/projects/$projectId': typeof DashboardProjectsProjectIdRoute
   '/dashboard/clients': typeof DashboardClientsIndexRoute
   '/dashboard/communications': typeof DashboardCommunicationsIndexRoute
@@ -127,11 +160,15 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRouteWithChildren
+  '/onboarding': typeof OnboardingRoute
+  '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
+  '/auth/mfa': typeof AuthMfaRoute
   '/auth/register': typeof AuthRegisterRoute
   '/dashboard/tasks': typeof DashboardTasksRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/dashboard/clients/$clientId': typeof DashboardClientsClientIdRoute
+  '/dashboard/homeowners/$homeownerId': typeof DashboardHomeownersHomeownerIdRoute
   '/dashboard/projects/$projectId': typeof DashboardProjectsProjectIdRoute
   '/dashboard/clients/': typeof DashboardClientsIndexRoute
   '/dashboard/communications/': typeof DashboardCommunicationsIndexRoute
@@ -144,11 +181,15 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/dashboard'
+    | '/onboarding'
+    | '/auth/forgot-password'
     | '/auth/login'
+    | '/auth/mfa'
     | '/auth/register'
     | '/dashboard/tasks'
     | '/dashboard/'
     | '/dashboard/clients/$clientId'
+    | '/dashboard/homeowners/$homeownerId'
     | '/dashboard/projects/$projectId'
     | '/dashboard/clients/'
     | '/dashboard/communications/'
@@ -158,11 +199,15 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/onboarding'
+    | '/auth/forgot-password'
     | '/auth/login'
+    | '/auth/mfa'
     | '/auth/register'
     | '/dashboard/tasks'
     | '/dashboard'
     | '/dashboard/clients/$clientId'
+    | '/dashboard/homeowners/$homeownerId'
     | '/dashboard/projects/$projectId'
     | '/dashboard/clients'
     | '/dashboard/communications'
@@ -173,11 +218,15 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/dashboard'
+    | '/onboarding'
+    | '/auth/forgot-password'
     | '/auth/login'
+    | '/auth/mfa'
     | '/auth/register'
     | '/dashboard/tasks'
     | '/dashboard/'
     | '/dashboard/clients/$clientId'
+    | '/dashboard/homeowners/$homeownerId'
     | '/dashboard/projects/$projectId'
     | '/dashboard/clients/'
     | '/dashboard/communications/'
@@ -189,12 +238,22 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DashboardRoute: typeof DashboardRouteWithChildren
+  OnboardingRoute: typeof OnboardingRoute
+  AuthForgotPasswordRoute: typeof AuthForgotPasswordRoute
   AuthLoginRoute: typeof AuthLoginRoute
+  AuthMfaRoute: typeof AuthMfaRoute
   AuthRegisterRoute: typeof AuthRegisterRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/onboarding': {
+      id: '/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dashboard': {
       id: '/dashboard'
       path: '/dashboard'
@@ -230,11 +289,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRegisterRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth/mfa': {
+      id: '/auth/mfa'
+      path: '/auth/mfa'
+      fullPath: '/auth/mfa'
+      preLoaderRoute: typeof AuthMfaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth/login': {
       id: '/auth/login'
       path: '/auth/login'
       fullPath: '/auth/login'
       preLoaderRoute: typeof AuthLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/forgot-password': {
+      id: '/auth/forgot-password'
+      path: '/auth/forgot-password'
+      fullPath: '/auth/forgot-password'
+      preLoaderRoute: typeof AuthForgotPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard/subcontractors/': {
@@ -279,6 +352,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardProjectsProjectIdRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/homeowners/$homeownerId': {
+      id: '/dashboard/homeowners/$homeownerId'
+      path: '/homeowners/$homeownerId'
+      fullPath: '/dashboard/homeowners/$homeownerId'
+      preLoaderRoute: typeof DashboardHomeownersHomeownerIdRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/dashboard/clients/$clientId': {
       id: '/dashboard/clients/$clientId'
       path: '/clients/$clientId'
@@ -293,6 +373,7 @@ interface DashboardRouteChildren {
   DashboardTasksRoute: typeof DashboardTasksRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
   DashboardClientsClientIdRoute: typeof DashboardClientsClientIdRoute
+  DashboardHomeownersHomeownerIdRoute: typeof DashboardHomeownersHomeownerIdRoute
   DashboardProjectsProjectIdRoute: typeof DashboardProjectsProjectIdRoute
   DashboardClientsIndexRoute: typeof DashboardClientsIndexRoute
   DashboardCommunicationsIndexRoute: typeof DashboardCommunicationsIndexRoute
@@ -305,6 +386,7 @@ const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardTasksRoute: DashboardTasksRoute,
   DashboardIndexRoute: DashboardIndexRoute,
   DashboardClientsClientIdRoute: DashboardClientsClientIdRoute,
+  DashboardHomeownersHomeownerIdRoute: DashboardHomeownersHomeownerIdRoute,
   DashboardProjectsProjectIdRoute: DashboardProjectsProjectIdRoute,
   DashboardClientsIndexRoute: DashboardClientsIndexRoute,
   DashboardCommunicationsIndexRoute: DashboardCommunicationsIndexRoute,
@@ -320,7 +402,10 @@ const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DashboardRoute: DashboardRouteWithChildren,
+  OnboardingRoute: OnboardingRoute,
+  AuthForgotPasswordRoute: AuthForgotPasswordRoute,
   AuthLoginRoute: AuthLoginRoute,
+  AuthMfaRoute: AuthMfaRoute,
   AuthRegisterRoute: AuthRegisterRoute,
 }
 export const routeTree = rootRouteImport

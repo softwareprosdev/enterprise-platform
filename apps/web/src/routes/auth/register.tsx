@@ -1,10 +1,9 @@
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
 import { useForm } from '@tanstack/react-form';
-import { zodValidator } from '@tanstack/zod-form-adapter';
 import { motion } from 'framer-motion';
-import { Code2, Eye, EyeOff, Loader2, CheckCircle2 } from 'lucide-react';
+import { HardHat, Eye, EyeOff, Loader2, CheckCircle2 } from 'lucide-react';
 import { useState } from 'react';
-import { registerSchema, slugify } from '@enterprise/shared';
+import { slugify } from '@enterprise/shared';
 import { trpc } from '@/lib/trpc';
 import { cn } from '@/lib/utils';
 
@@ -35,10 +34,6 @@ function RegisterPage() {
       tenantName: '',
       tenantSlug: '',
     },
-    validatorAdapter: zodValidator(),
-    validators: {
-      onChange: registerSchema,
-    },
     onSubmit: async ({ value }) => {
       setError(null);
       registerMutation.mutate(value);
@@ -64,21 +59,21 @@ function RegisterPage() {
         {/* Logo */}
         <Link to="/" className="flex items-center justify-center gap-2 mb-8">
           <div className="w-10 h-10 rounded-lg bg-gradient-primary flex items-center justify-center">
-            <Code2 className="w-6 h-6 text-white" />
+            <HardHat className="w-6 h-6 text-white" />
           </div>
-          <span className="font-bold text-xl">Enterprise</span>
+          <span className="font-bold text-xl">Villa Homes</span>
         </Link>
 
         {/* Card */}
         <div className="bg-card rounded-xl border border-border p-8">
-          <h1 className="text-2xl font-bold text-center mb-2">Start your free trial</h1>
+          <h1 className="text-2xl font-bold text-center mb-2">Start your builder trial</h1>
           <p className="text-muted-foreground text-center mb-8">
-            14 days free, no credit card required
+            14 days free, built for construction teams
           </p>
 
           {/* Features list */}
           <div className="flex items-center justify-center gap-6 mb-8 text-sm">
-            {['Client portal', 'Project tracking', 'Invoicing'].map((feature) => (
+            {['Homeowner portal', 'Phase scheduling', 'Change orders'].map((feature) => (
               <div key={feature} className="flex items-center gap-1 text-muted-foreground">
                 <CheckCircle2 className="w-4 h-4 text-success" />
                 {feature}
@@ -119,7 +114,7 @@ function RegisterPage() {
                   />
                   {field.state.meta.errors?.[0] && (
                     <p className="text-destructive text-sm mt-1">
-                      {typeof field.state.meta.errors[0] === 'string' ? field.state.meta.errors[0] : field.state.meta.errors[0]?.message || 'Invalid value'}
+                      {typeof field.state.meta.errors[0] === 'string' ? field.state.meta.errors[0] : field.state.meta?.errors?.[0] || 'Invalid value'}
                     </p>
                   )}
                 </div>
@@ -145,7 +140,7 @@ function RegisterPage() {
                   />
                   {field.state.meta.errors?.[0] && (
                     <p className="text-destructive text-sm mt-1">
-                      {typeof field.state.meta.errors[0] === 'string' ? field.state.meta.errors[0] : field.state.meta.errors[0]?.message || 'Invalid value'}
+                      {typeof field.state.meta.errors[0] === 'string' ? field.state.meta.errors[0] : field.state.meta?.errors?.[0] || 'Invalid value'}
                     </p>
                   )}
                 </div>
@@ -184,7 +179,7 @@ function RegisterPage() {
                   </div>
                   {field.state.meta.errors?.[0] && (
                     <p className="text-destructive text-sm mt-1">
-                      {typeof field.state.meta.errors[0] === 'string' ? field.state.meta.errors[0] : field.state.meta.errors[0]?.message || 'Invalid value'}
+                      {typeof field.state.meta.errors[0] === 'string' ? field.state.meta.errors[0] : field.state.meta?.errors?.[0] || 'Invalid value'}
                     </p>
                   )}
                 </div>
@@ -210,7 +205,7 @@ function RegisterPage() {
                   />
                   {field.state.meta.errors?.[0] && (
                     <p className="text-destructive text-sm mt-1">
-                      {typeof field.state.meta.errors[0] === 'string' ? field.state.meta.errors[0] : field.state.meta.errors[0]?.message || 'Invalid value'}
+                      {typeof field.state.meta.errors[0] === 'string' ? field.state.meta.errors[0] : field.state.meta?.errors?.[0] || 'Invalid value'}
                     </p>
                   )}
                 </div>
@@ -241,7 +236,7 @@ function RegisterPage() {
                   </div>
                   {field.state.meta.errors?.[0] && (
                     <p className="text-destructive text-sm mt-1">
-                      {typeof field.state.meta.errors[0] === 'string' ? field.state.meta.errors[0] : field.state.meta.errors[0]?.message || 'Invalid value'}
+                      {typeof field.state.meta.errors[0] === 'string' ? field.state.meta.errors[0] : field.state.meta?.errors?.[0] || 'Invalid value'}
                     </p>
                   )}
                 </div>
