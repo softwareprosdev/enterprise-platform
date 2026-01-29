@@ -19,6 +19,7 @@ import { Route as AuthMfaRouteImport } from './routes/auth/mfa'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as AuthForgotPasswordRouteImport } from './routes/auth/forgot-password'
 import { Route as DashboardSubcontractorsIndexRouteImport } from './routes/dashboard/subcontractors/index'
+import { Route as DashboardSocialIndexRouteImport } from './routes/dashboard/social/index'
 import { Route as DashboardSettingsIndexRouteImport } from './routes/dashboard/settings/index'
 import { Route as DashboardSafetyIndexRouteImport } from './routes/dashboard/safety/index'
 import { Route as DashboardProjectsIndexRouteImport } from './routes/dashboard/projects/index'
@@ -26,6 +27,7 @@ import { Route as DashboardLeadsIndexRouteImport } from './routes/dashboard/lead
 import { Route as DashboardHomeownersIndexRouteImport } from './routes/dashboard/homeowners/index'
 import { Route as DashboardDronesIndexRouteImport } from './routes/dashboard/drones/index'
 import { Route as DashboardCrewIndexRouteImport } from './routes/dashboard/crew/index'
+import { Route as DashboardContactsIndexRouteImport } from './routes/dashboard/contacts/index'
 import { Route as DashboardCommunicationsIndexRouteImport } from './routes/dashboard/communications/index'
 import { Route as DashboardClientsIndexRouteImport } from './routes/dashboard/clients/index'
 import { Route as DashboardCallsIndexRouteImport } from './routes/dashboard/calls/index'
@@ -86,6 +88,11 @@ const DashboardSubcontractorsIndexRoute =
     path: '/subcontractors/',
     getParentRoute: () => DashboardRoute,
   } as any)
+const DashboardSocialIndexRoute = DashboardSocialIndexRouteImport.update({
+  id: '/social/',
+  path: '/social/',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const DashboardSettingsIndexRoute = DashboardSettingsIndexRouteImport.update({
   id: '/settings/',
   path: '/settings/',
@@ -120,6 +127,11 @@ const DashboardDronesIndexRoute = DashboardDronesIndexRouteImport.update({
 const DashboardCrewIndexRoute = DashboardCrewIndexRouteImport.update({
   id: '/crew/',
   path: '/crew/',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardContactsIndexRoute = DashboardContactsIndexRouteImport.update({
+  id: '/contacts/',
+  path: '/contacts/',
   getParentRoute: () => DashboardRoute,
 } as any)
 const DashboardCommunicationsIndexRoute =
@@ -185,6 +197,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/calls/': typeof DashboardCallsIndexRoute
   '/dashboard/clients/': typeof DashboardClientsIndexRoute
   '/dashboard/communications/': typeof DashboardCommunicationsIndexRoute
+  '/dashboard/contacts/': typeof DashboardContactsIndexRoute
   '/dashboard/crew/': typeof DashboardCrewIndexRoute
   '/dashboard/drones/': typeof DashboardDronesIndexRoute
   '/dashboard/homeowners/': typeof DashboardHomeownersIndexRoute
@@ -192,6 +205,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/projects/': typeof DashboardProjectsIndexRoute
   '/dashboard/safety/': typeof DashboardSafetyIndexRoute
   '/dashboard/settings/': typeof DashboardSettingsIndexRoute
+  '/dashboard/social/': typeof DashboardSocialIndexRoute
   '/dashboard/subcontractors/': typeof DashboardSubcontractorsIndexRoute
 }
 export interface FileRoutesByTo {
@@ -211,6 +225,7 @@ export interface FileRoutesByTo {
   '/dashboard/calls': typeof DashboardCallsIndexRoute
   '/dashboard/clients': typeof DashboardClientsIndexRoute
   '/dashboard/communications': typeof DashboardCommunicationsIndexRoute
+  '/dashboard/contacts': typeof DashboardContactsIndexRoute
   '/dashboard/crew': typeof DashboardCrewIndexRoute
   '/dashboard/drones': typeof DashboardDronesIndexRoute
   '/dashboard/homeowners': typeof DashboardHomeownersIndexRoute
@@ -218,6 +233,7 @@ export interface FileRoutesByTo {
   '/dashboard/projects': typeof DashboardProjectsIndexRoute
   '/dashboard/safety': typeof DashboardSafetyIndexRoute
   '/dashboard/settings': typeof DashboardSettingsIndexRoute
+  '/dashboard/social': typeof DashboardSocialIndexRoute
   '/dashboard/subcontractors': typeof DashboardSubcontractorsIndexRoute
 }
 export interface FileRoutesById {
@@ -239,6 +255,7 @@ export interface FileRoutesById {
   '/dashboard/calls/': typeof DashboardCallsIndexRoute
   '/dashboard/clients/': typeof DashboardClientsIndexRoute
   '/dashboard/communications/': typeof DashboardCommunicationsIndexRoute
+  '/dashboard/contacts/': typeof DashboardContactsIndexRoute
   '/dashboard/crew/': typeof DashboardCrewIndexRoute
   '/dashboard/drones/': typeof DashboardDronesIndexRoute
   '/dashboard/homeowners/': typeof DashboardHomeownersIndexRoute
@@ -246,6 +263,7 @@ export interface FileRoutesById {
   '/dashboard/projects/': typeof DashboardProjectsIndexRoute
   '/dashboard/safety/': typeof DashboardSafetyIndexRoute
   '/dashboard/settings/': typeof DashboardSettingsIndexRoute
+  '/dashboard/social/': typeof DashboardSocialIndexRoute
   '/dashboard/subcontractors/': typeof DashboardSubcontractorsIndexRoute
 }
 export interface FileRouteTypes {
@@ -268,6 +286,7 @@ export interface FileRouteTypes {
     | '/dashboard/calls/'
     | '/dashboard/clients/'
     | '/dashboard/communications/'
+    | '/dashboard/contacts/'
     | '/dashboard/crew/'
     | '/dashboard/drones/'
     | '/dashboard/homeowners/'
@@ -275,6 +294,7 @@ export interface FileRouteTypes {
     | '/dashboard/projects/'
     | '/dashboard/safety/'
     | '/dashboard/settings/'
+    | '/dashboard/social/'
     | '/dashboard/subcontractors/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -294,6 +314,7 @@ export interface FileRouteTypes {
     | '/dashboard/calls'
     | '/dashboard/clients'
     | '/dashboard/communications'
+    | '/dashboard/contacts'
     | '/dashboard/crew'
     | '/dashboard/drones'
     | '/dashboard/homeowners'
@@ -301,6 +322,7 @@ export interface FileRouteTypes {
     | '/dashboard/projects'
     | '/dashboard/safety'
     | '/dashboard/settings'
+    | '/dashboard/social'
     | '/dashboard/subcontractors'
   id:
     | '__root__'
@@ -321,6 +343,7 @@ export interface FileRouteTypes {
     | '/dashboard/calls/'
     | '/dashboard/clients/'
     | '/dashboard/communications/'
+    | '/dashboard/contacts/'
     | '/dashboard/crew/'
     | '/dashboard/drones/'
     | '/dashboard/homeowners/'
@@ -328,6 +351,7 @@ export interface FileRouteTypes {
     | '/dashboard/projects/'
     | '/dashboard/safety/'
     | '/dashboard/settings/'
+    | '/dashboard/social/'
     | '/dashboard/subcontractors/'
   fileRoutesById: FileRoutesById
 }
@@ -413,6 +437,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardSubcontractorsIndexRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/social/': {
+      id: '/dashboard/social/'
+      path: '/social'
+      fullPath: '/dashboard/social/'
+      preLoaderRoute: typeof DashboardSocialIndexRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/dashboard/settings/': {
       id: '/dashboard/settings/'
       path: '/settings'
@@ -460,6 +491,13 @@ declare module '@tanstack/react-router' {
       path: '/crew'
       fullPath: '/dashboard/crew/'
       preLoaderRoute: typeof DashboardCrewIndexRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/contacts/': {
+      id: '/dashboard/contacts/'
+      path: '/contacts'
+      fullPath: '/dashboard/contacts/'
+      preLoaderRoute: typeof DashboardContactsIndexRouteImport
       parentRoute: typeof DashboardRoute
     }
     '/dashboard/communications/': {
@@ -532,6 +570,7 @@ interface DashboardRouteChildren {
   DashboardCallsIndexRoute: typeof DashboardCallsIndexRoute
   DashboardClientsIndexRoute: typeof DashboardClientsIndexRoute
   DashboardCommunicationsIndexRoute: typeof DashboardCommunicationsIndexRoute
+  DashboardContactsIndexRoute: typeof DashboardContactsIndexRoute
   DashboardCrewIndexRoute: typeof DashboardCrewIndexRoute
   DashboardDronesIndexRoute: typeof DashboardDronesIndexRoute
   DashboardHomeownersIndexRoute: typeof DashboardHomeownersIndexRoute
@@ -539,6 +578,7 @@ interface DashboardRouteChildren {
   DashboardProjectsIndexRoute: typeof DashboardProjectsIndexRoute
   DashboardSafetyIndexRoute: typeof DashboardSafetyIndexRoute
   DashboardSettingsIndexRoute: typeof DashboardSettingsIndexRoute
+  DashboardSocialIndexRoute: typeof DashboardSocialIndexRoute
   DashboardSubcontractorsIndexRoute: typeof DashboardSubcontractorsIndexRoute
 }
 
@@ -553,6 +593,7 @@ const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardCallsIndexRoute: DashboardCallsIndexRoute,
   DashboardClientsIndexRoute: DashboardClientsIndexRoute,
   DashboardCommunicationsIndexRoute: DashboardCommunicationsIndexRoute,
+  DashboardContactsIndexRoute: DashboardContactsIndexRoute,
   DashboardCrewIndexRoute: DashboardCrewIndexRoute,
   DashboardDronesIndexRoute: DashboardDronesIndexRoute,
   DashboardHomeownersIndexRoute: DashboardHomeownersIndexRoute,
@@ -560,6 +601,7 @@ const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardProjectsIndexRoute: DashboardProjectsIndexRoute,
   DashboardSafetyIndexRoute: DashboardSafetyIndexRoute,
   DashboardSettingsIndexRoute: DashboardSettingsIndexRoute,
+  DashboardSocialIndexRoute: DashboardSocialIndexRoute,
   DashboardSubcontractorsIndexRoute: DashboardSubcontractorsIndexRoute,
 }
 
