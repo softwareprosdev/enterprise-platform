@@ -399,19 +399,23 @@ function CommunicationsPage() {
                             </p>
                           </div>
                         )}
-                        {comm.actionItems && Array.isArray(comm.actionItems) && (comm.actionItems as string[]).length > 0 && (
-                          <div>
-                            <h4 className="text-sm font-medium mb-2">Action Items</h4>
-                            <ul className="space-y-1">
-                              {(comm.actionItems as string[]).map((item: string, idx: number) => (
-                                <li key={idx} className="flex items-center gap-2 text-sm">
-                                  <span className="w-1.5 h-1.5 rounded-full bg-[#1e3a5f]" />
-                                  <span>{item}</span>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        )}
+                        {(() => {
+                          const items = comm.actionItems as string[] | null;
+                          if (!items || !Array.isArray(items) || items.length === 0) return null;
+                          return (
+                            <div>
+                              <h4 className="text-sm font-medium mb-2">Action Items</h4>
+                              <ul className="space-y-1">
+                                {items.map((item: string, idx: number) => (
+                                  <li key={idx} className="flex items-center gap-2 text-sm">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-[#1e3a5f]" />
+                                    <span>{item}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          );
+                        })()}
                         {playingRecording === comm.id && comm.recordingUrl && (
                           <div className="mt-4">
                             <audio controls className="w-full">
