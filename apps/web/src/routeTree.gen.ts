@@ -20,9 +20,12 @@ import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as AuthForgotPasswordRouteImport } from './routes/auth/forgot-password'
 import { Route as DashboardSubcontractorsIndexRouteImport } from './routes/dashboard/subcontractors/index'
 import { Route as DashboardSettingsIndexRouteImport } from './routes/dashboard/settings/index'
+import { Route as DashboardSafetyIndexRouteImport } from './routes/dashboard/safety/index'
 import { Route as DashboardProjectsIndexRouteImport } from './routes/dashboard/projects/index'
 import { Route as DashboardLeadsIndexRouteImport } from './routes/dashboard/leads/index'
 import { Route as DashboardHomeownersIndexRouteImport } from './routes/dashboard/homeowners/index'
+import { Route as DashboardDronesIndexRouteImport } from './routes/dashboard/drones/index'
+import { Route as DashboardCrewIndexRouteImport } from './routes/dashboard/crew/index'
 import { Route as DashboardCommunicationsIndexRouteImport } from './routes/dashboard/communications/index'
 import { Route as DashboardClientsIndexRouteImport } from './routes/dashboard/clients/index'
 import { Route as DashboardCallsIndexRouteImport } from './routes/dashboard/calls/index'
@@ -88,6 +91,11 @@ const DashboardSettingsIndexRoute = DashboardSettingsIndexRouteImport.update({
   path: '/settings/',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardSafetyIndexRoute = DashboardSafetyIndexRouteImport.update({
+  id: '/safety/',
+  path: '/safety/',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const DashboardProjectsIndexRoute = DashboardProjectsIndexRouteImport.update({
   id: '/projects/',
   path: '/projects/',
@@ -104,6 +112,16 @@ const DashboardHomeownersIndexRoute =
     path: '/homeowners/',
     getParentRoute: () => DashboardRoute,
   } as any)
+const DashboardDronesIndexRoute = DashboardDronesIndexRouteImport.update({
+  id: '/drones/',
+  path: '/drones/',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardCrewIndexRoute = DashboardCrewIndexRouteImport.update({
+  id: '/crew/',
+  path: '/crew/',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const DashboardCommunicationsIndexRoute =
   DashboardCommunicationsIndexRouteImport.update({
     id: '/communications/',
@@ -167,9 +185,12 @@ export interface FileRoutesByFullPath {
   '/dashboard/calls/': typeof DashboardCallsIndexRoute
   '/dashboard/clients/': typeof DashboardClientsIndexRoute
   '/dashboard/communications/': typeof DashboardCommunicationsIndexRoute
+  '/dashboard/crew/': typeof DashboardCrewIndexRoute
+  '/dashboard/drones/': typeof DashboardDronesIndexRoute
   '/dashboard/homeowners/': typeof DashboardHomeownersIndexRoute
   '/dashboard/leads/': typeof DashboardLeadsIndexRoute
   '/dashboard/projects/': typeof DashboardProjectsIndexRoute
+  '/dashboard/safety/': typeof DashboardSafetyIndexRoute
   '/dashboard/settings/': typeof DashboardSettingsIndexRoute
   '/dashboard/subcontractors/': typeof DashboardSubcontractorsIndexRoute
 }
@@ -190,9 +211,12 @@ export interface FileRoutesByTo {
   '/dashboard/calls': typeof DashboardCallsIndexRoute
   '/dashboard/clients': typeof DashboardClientsIndexRoute
   '/dashboard/communications': typeof DashboardCommunicationsIndexRoute
+  '/dashboard/crew': typeof DashboardCrewIndexRoute
+  '/dashboard/drones': typeof DashboardDronesIndexRoute
   '/dashboard/homeowners': typeof DashboardHomeownersIndexRoute
   '/dashboard/leads': typeof DashboardLeadsIndexRoute
   '/dashboard/projects': typeof DashboardProjectsIndexRoute
+  '/dashboard/safety': typeof DashboardSafetyIndexRoute
   '/dashboard/settings': typeof DashboardSettingsIndexRoute
   '/dashboard/subcontractors': typeof DashboardSubcontractorsIndexRoute
 }
@@ -215,9 +239,12 @@ export interface FileRoutesById {
   '/dashboard/calls/': typeof DashboardCallsIndexRoute
   '/dashboard/clients/': typeof DashboardClientsIndexRoute
   '/dashboard/communications/': typeof DashboardCommunicationsIndexRoute
+  '/dashboard/crew/': typeof DashboardCrewIndexRoute
+  '/dashboard/drones/': typeof DashboardDronesIndexRoute
   '/dashboard/homeowners/': typeof DashboardHomeownersIndexRoute
   '/dashboard/leads/': typeof DashboardLeadsIndexRoute
   '/dashboard/projects/': typeof DashboardProjectsIndexRoute
+  '/dashboard/safety/': typeof DashboardSafetyIndexRoute
   '/dashboard/settings/': typeof DashboardSettingsIndexRoute
   '/dashboard/subcontractors/': typeof DashboardSubcontractorsIndexRoute
 }
@@ -241,9 +268,12 @@ export interface FileRouteTypes {
     | '/dashboard/calls/'
     | '/dashboard/clients/'
     | '/dashboard/communications/'
+    | '/dashboard/crew/'
+    | '/dashboard/drones/'
     | '/dashboard/homeowners/'
     | '/dashboard/leads/'
     | '/dashboard/projects/'
+    | '/dashboard/safety/'
     | '/dashboard/settings/'
     | '/dashboard/subcontractors/'
   fileRoutesByTo: FileRoutesByTo
@@ -264,9 +294,12 @@ export interface FileRouteTypes {
     | '/dashboard/calls'
     | '/dashboard/clients'
     | '/dashboard/communications'
+    | '/dashboard/crew'
+    | '/dashboard/drones'
     | '/dashboard/homeowners'
     | '/dashboard/leads'
     | '/dashboard/projects'
+    | '/dashboard/safety'
     | '/dashboard/settings'
     | '/dashboard/subcontractors'
   id:
@@ -288,9 +321,12 @@ export interface FileRouteTypes {
     | '/dashboard/calls/'
     | '/dashboard/clients/'
     | '/dashboard/communications/'
+    | '/dashboard/crew/'
+    | '/dashboard/drones/'
     | '/dashboard/homeowners/'
     | '/dashboard/leads/'
     | '/dashboard/projects/'
+    | '/dashboard/safety/'
     | '/dashboard/settings/'
     | '/dashboard/subcontractors/'
   fileRoutesById: FileRoutesById
@@ -384,6 +420,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardSettingsIndexRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/safety/': {
+      id: '/dashboard/safety/'
+      path: '/safety'
+      fullPath: '/dashboard/safety/'
+      preLoaderRoute: typeof DashboardSafetyIndexRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/dashboard/projects/': {
       id: '/dashboard/projects/'
       path: '/projects'
@@ -403,6 +446,20 @@ declare module '@tanstack/react-router' {
       path: '/homeowners'
       fullPath: '/dashboard/homeowners/'
       preLoaderRoute: typeof DashboardHomeownersIndexRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/drones/': {
+      id: '/dashboard/drones/'
+      path: '/drones'
+      fullPath: '/dashboard/drones/'
+      preLoaderRoute: typeof DashboardDronesIndexRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/crew/': {
+      id: '/dashboard/crew/'
+      path: '/crew'
+      fullPath: '/dashboard/crew/'
+      preLoaderRoute: typeof DashboardCrewIndexRouteImport
       parentRoute: typeof DashboardRoute
     }
     '/dashboard/communications/': {
@@ -475,9 +532,12 @@ interface DashboardRouteChildren {
   DashboardCallsIndexRoute: typeof DashboardCallsIndexRoute
   DashboardClientsIndexRoute: typeof DashboardClientsIndexRoute
   DashboardCommunicationsIndexRoute: typeof DashboardCommunicationsIndexRoute
+  DashboardCrewIndexRoute: typeof DashboardCrewIndexRoute
+  DashboardDronesIndexRoute: typeof DashboardDronesIndexRoute
   DashboardHomeownersIndexRoute: typeof DashboardHomeownersIndexRoute
   DashboardLeadsIndexRoute: typeof DashboardLeadsIndexRoute
   DashboardProjectsIndexRoute: typeof DashboardProjectsIndexRoute
+  DashboardSafetyIndexRoute: typeof DashboardSafetyIndexRoute
   DashboardSettingsIndexRoute: typeof DashboardSettingsIndexRoute
   DashboardSubcontractorsIndexRoute: typeof DashboardSubcontractorsIndexRoute
 }
@@ -493,9 +553,12 @@ const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardCallsIndexRoute: DashboardCallsIndexRoute,
   DashboardClientsIndexRoute: DashboardClientsIndexRoute,
   DashboardCommunicationsIndexRoute: DashboardCommunicationsIndexRoute,
+  DashboardCrewIndexRoute: DashboardCrewIndexRoute,
+  DashboardDronesIndexRoute: DashboardDronesIndexRoute,
   DashboardHomeownersIndexRoute: DashboardHomeownersIndexRoute,
   DashboardLeadsIndexRoute: DashboardLeadsIndexRoute,
   DashboardProjectsIndexRoute: DashboardProjectsIndexRoute,
+  DashboardSafetyIndexRoute: DashboardSafetyIndexRoute,
   DashboardSettingsIndexRoute: DashboardSettingsIndexRoute,
   DashboardSubcontractorsIndexRoute: DashboardSubcontractorsIndexRoute,
 }
