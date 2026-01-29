@@ -15,10 +15,18 @@ import {
   ChevronDown,
   Home,
   HardHat,
+  Target,
+  Navigation,
+  Plane,
+  Shield,
+  Share2,
+  BarChart3,
+  MessageSquare,
 } from 'lucide-react';
 import { useState } from 'react';
 import { trpc } from '@/lib/trpc';
 import { cn, getInitials } from '@/lib/utils';
+import { VillaAIAssistant } from '@/components/villa/VillaAIAssistant';
 
 export const Route = createFileRoute('/dashboard')({
   component: DashboardLayout,
@@ -26,11 +34,18 @@ export const Route = createFileRoute('/dashboard')({
 
 const navItems = [
   { to: '/dashboard', icon: LayoutDashboard, label: 'Dashboard', exact: true },
+  { to: '/dashboard/leads', icon: Target, label: 'Leads' },
   { to: '/dashboard/homeowners', icon: Users, label: 'Homeowners' },
   { to: '/dashboard/projects', icon: FolderKanban, label: 'Projects' },
   { to: '/dashboard/tasks', icon: CheckSquare, label: 'Tasks' },
   { to: '/dashboard/subcontractors', icon: HardHat, label: 'Subcontractors' },
-  { to: '/dashboard/communications', icon: Phone, label: 'Communications' },
+  { to: '/dashboard/calls', icon: Phone, label: 'Villa Phone' },
+  { to: '/dashboard/contacts', icon: MessageSquare, label: 'Contacts' },
+  { to: '/dashboard/crew', icon: Navigation, label: 'Crew Tracking' },
+  { to: '/dashboard/drones', icon: Plane, label: 'Drones' },
+  { to: '/dashboard/safety', icon: Shield, label: 'Safety' },
+  { to: '/dashboard/social', icon: Share2, label: 'Social Media' },
+  { to: '/dashboard/analytics', icon: BarChart3, label: 'AI Analytics' },
   { to: '/dashboard/billing', icon: CreditCard, label: 'Billing' },
   { to: '/dashboard/settings', icon: Settings, label: 'Settings' },
 ];
@@ -189,6 +204,9 @@ function DashboardLayout() {
           <Outlet />
         </main>
       </div>
+
+      {/* Villa AI Assistant */}
+      <VillaAIAssistant />
     </div>
   );
 }
