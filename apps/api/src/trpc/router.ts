@@ -5,6 +5,7 @@ import { authRouter } from './procedures/auth.js';
 import { tenantsRouter } from './procedures/tenants.js';
 import { usersRouter } from './procedures/users.js';
 import { homeownersRouter } from './procedures/homeowners.js';
+import { clientsRouter } from './procedures/clients.js';
 import { subcontractorsRouter, tradesRouter } from './procedures/subcontractors.js';
 import { communicationsRouter } from './procedures/communications.js';
 import { projectsRouter } from './procedures/projects.js';
@@ -22,6 +23,7 @@ export const appRouter = router({
   tenants: tenantsRouter,
   users: usersRouter,
   homeowners: homeownersRouter,
+  clients: clientsRouter,
   subcontractors: subcontractorsRouter,
   trades: tradesRouter,
   communications: communicationsRouter,

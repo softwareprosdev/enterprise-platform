@@ -109,7 +109,7 @@ export const tasksRouter = router({
         limit: pageSize,
         offset,
         with: {
-          assignee: {
+          assignedTo: {
             columns: {
               id: true,
               name: true,
@@ -168,7 +168,7 @@ export const tasksRouter = router({
     const task = await ctx.db.query.tasks.findFirst({
       where: eq(tasks.id, input.id),
       with: {
-        assignee: {
+        assignedTo: {
           columns: {
             id: true,
             name: true,
@@ -208,7 +208,7 @@ export const tasksRouter = router({
       },
     });
 
-    if (!task || task.project.tenantId !== ctx.tenant.id) {
+    if (!task || task.project?.tenantId !== ctx.tenant.id) {
       throw new TRPCError({
         code: 'NOT_FOUND',
         message: 'Task not found',
@@ -243,6 +243,7 @@ export const tasksRouter = router({
       .insert(tasks)
       .values({
         ...input,
+        estimatedCost: input.estimatedCost ? input.estimatedCost.toString() : undefined,
         status: 'pending',
         sortOrder: (maxSort?.sortOrder || 0) + 1,
         actualCost: '0',
@@ -366,7 +367,7 @@ export const tasksRouter = router({
         },
       });
 
-      if (!task || task.project.tenantId !== ctx.tenant.id) {
+      if (!task || task.project?.tenantId !== ctx.tenant.id) {
         throw new TRPCError({
           code: 'NOT_FOUND',
           message: 'Task not found',
@@ -394,7 +395,7 @@ export const tasksRouter = router({
         },
       });
 
-      if (!task || task.project.tenantId !== ctx.tenant.id) {
+      if (!task || task.project?.tenantId !== ctx.tenant.id) {
         throw new TRPCError({
           code: 'NOT_FOUND',
           message: 'Task not found',

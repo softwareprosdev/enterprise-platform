@@ -42,7 +42,7 @@ export const subcontractorsRouter = router({
       }
 
       // If filtering by trade, we need to join with subcontractorTrades
-      let subcontractorList;
+      let subcontractorList: Awaited<ReturnType<typeof ctx.db.query.subcontractors.findMany>>;
       if (trade) {
         const tradeId = trade;
         const tradeSubs = await ctx.db.query.subcontractorTrades.findMany({
@@ -148,6 +148,7 @@ export const subcontractorsRouter = router({
         status: 'active',
         totalProjectsCompleted: 0,
         ...rest,
+        insuranceCoverageAmount: rest.insuranceCoverageAmount ? rest.insuranceCoverageAmount.toString() : undefined,
         primaryTradeId: primaryTradeId || null,
       })
       .returning();
@@ -186,10 +187,15 @@ export const subcontractorsRouter = router({
         });
       }
 
+      const { rating, qualityScore, insuranceCoverageAmount, ...restData } = data;
+      
       const [updated] = await ctx.db
         .update(subcontractors)
         .set({
-          ...data,
+          ...restData,
+          rating: rating !== undefined ? rating.toString() : undefined,
+          qualityScore: qualityScore !== undefined ? qualityScore.toString() : undefined,
+          insuranceCoverageAmount: insuranceCoverageAmount ? insuranceCoverageAmount.toString() : undefined,
           updatedAt: new Date(),
         })
         .where(eq(subcontractors.id, id))
@@ -225,9 +231,9 @@ export const subcontractorsRouter = router({
       const [updated] = await ctx.db
         .update(subcontractors)
         .set({
-          rating,
+          rating: rating?.toString(),
           onTimePercentage,
-          qualityScore,
+          qualityScore: qualityScore?.toString(),
           updatedAt: new Date(),
         })
         .where(eq(subcontractors.id, id))

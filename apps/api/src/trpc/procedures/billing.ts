@@ -90,11 +90,8 @@ export const billingRouter = router({
       return {
         items: invoiceList.map((invoice) => ({
           id: invoice.id,
-          amount: invoice.amount,
-          currency: invoice.currency,
+          amount: invoice.total,
           status: invoice.status,
-          invoiceUrl: invoice.invoiceUrl,
-          pdfUrl: invoice.pdfUrl,
           paidAt: invoice.paidAt,
           dueDate: invoice.dueDate,
           createdAt: invoice.createdAt,

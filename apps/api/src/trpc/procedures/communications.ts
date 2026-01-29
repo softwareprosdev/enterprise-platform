@@ -212,9 +212,14 @@ export const communicationsRouter = router({
         });
       }
 
+      const { sentimentScore, ...restData } = data;
+      
       const [updated] = await ctx.db
         .update(communications)
-        .set(data)
+        .set({
+          ...restData,
+          sentimentScore: sentimentScore !== undefined ? sentimentScore.toString() : undefined,
+        })
         .where(eq(communications.id, id))
         .returning();
 
@@ -279,11 +284,16 @@ export const communicationsRouter = router({
         });
       }
 
+      const { confidence, startTimeSeconds, endTimeSeconds, ...restData } = rest;
+      
       const [transcription] = await ctx.db
         .insert(callTranscriptions)
         .values({
           communicationId,
-          ...rest,
+          ...restData,
+          confidence: confidence !== undefined ? confidence.toString() : undefined,
+          startTimeSeconds: startTimeSeconds !== undefined ? startTimeSeconds.toString() : undefined,
+          endTimeSeconds: endTimeSeconds !== undefined ? endTimeSeconds.toString() : undefined,
         })
         .returning();
 

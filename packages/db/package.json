@@ -14,8 +14,10 @@
     "generate": "drizzle-kit generate",
     "push": "drizzle-kit push",
     "migrate": "drizzle-kit migrate",
+    "migrate:deploy": "drizzle-kit migrate",
     "studio": "drizzle-kit studio",
     "seed": "tsx src/seed.ts",
+    "seed:prod": "tsx src/seed-production.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

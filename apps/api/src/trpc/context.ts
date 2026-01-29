@@ -48,7 +48,7 @@ export async function createContext({ req, res }: CreateFastifyContextOptions): 
               email: userResult.email,
               name: userResult.name,
               avatar: userResult.avatar,
-              role: userResult.role,
+              role: userResult.role as import('@enterprise/shared').UserRole,
               mfaEnabled: userResult.mfaEnabled,
             };
 

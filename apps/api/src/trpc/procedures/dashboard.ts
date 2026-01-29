@@ -247,7 +247,7 @@ export const dashboardRouter = router({
           if (!monthlyData[paidMonthKey]) {
             monthlyData[paidMonthKey] = { billed: 0, collected: 0 };
           }
-          monthlyData[paidMonthKey].collected += parseFloat(invoice.paidAmount || invoice.total || '0');
+          monthlyData[paidMonthKey].collected += parseFloat(invoice.total || '0');
         }
       }
     }
@@ -296,7 +296,7 @@ export const dashboardRouter = router({
         project: {
           columns: { id: true, name: true },
         },
-        assignee: {
+        assignedTo: {
           columns: { id: true, name: true, avatar: true },
         },
         trade: true,
@@ -329,7 +329,7 @@ export const dashboardRouter = router({
         scheduledDate: t.scheduledDate,
         priority: t.priority,
         project: t.project,
-        assignee: t.assignee,
+        assignee: t.assignedTo,
         trade: t.trade,
       })),
       inspections: upcomingInspections.map((i) => ({
@@ -381,8 +381,7 @@ export const dashboardRouter = router({
       ),
       with: {
         project: {
-          where: eq(projects.tenantId, ctx.tenant.id),
-          columns: { id: true, name: true, currentPhase: true },
+          columns: { id: true, name: true, currentPhase: true, tenantId: true },
         },
         affectedTrade: true,
       },
@@ -390,7 +389,7 @@ export const dashboardRouter = router({
       limit: 10,
     });
 
-    return risks.filter((r) => r.project);
+    return risks.filter((r) => r.project && r.project.tenantId === ctx.tenant.id);
   }),
 
   // Get team members

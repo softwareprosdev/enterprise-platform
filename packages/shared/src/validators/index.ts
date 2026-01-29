@@ -98,6 +98,32 @@ export const onboardingIntegrationsSchema = z.object({
   integrations: z.array(z.string()).optional(),
 });
 
+// =============================================================================
+// Client Validators
+// =============================================================================
+
+export const clientCreateSchema = z.object({
+  companyName: z.string().min(2, 'Company name must be at least 2 characters'),
+  contactName: z.string().min(2, 'Contact name must be at least 2 characters'),
+  email: z.string().email('Invalid email address'),
+  phone: z.string().optional(),
+  website: z.string().url('Invalid website URL').optional(),
+  industry: z.string().optional(),
+  notes: z.string().optional(),
+  status: z.enum(['lead', 'prospect', 'onboarding', 'active', 'completed', 'churned']).optional(),
+});
+
+export const clientUpdateSchema = z.object({
+  companyName: z.string().min(2, 'Company name must be at least 2 characters').optional(),
+  contactName: z.string().min(2, 'Contact name must be at least 2 characters').optional(),
+  email: z.string().email('Invalid email address').optional(),
+  phone: z.string().optional(),
+  website: z.string().url('Invalid website URL').optional(),
+  industry: z.string().optional(),
+  notes: z.string().optional(),
+  status: z.enum(['lead', 'prospect', 'onboarding', 'active', 'completed', 'churned']).optional(),
+});
+
 export const onboardingBillingSchema = z.object({
   planId: z.string().uuid('Invalid plan ID'),
 });

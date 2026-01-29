@@ -181,15 +181,10 @@ export const projectsRouter = router({
         projectManager: true,
         phases: {
           orderBy: [projectPhases.sortOrder],
-          with: {
-            completedBy: {
-              columns: { id: true, name: true },
-            },
-          },
         },
         tasks: {
           with: {
-            assignee: {
+            assignedTo: {
               columns: { id: true, name: true },
             },
             assignedSubcontractor: {
@@ -262,6 +257,8 @@ export const projectsRouter = router({
         totalInvoiced: '0',
         totalPaid: '0',
         ...projectData,
+        contractAmount: projectData.contractAmount ? projectData.contractAmount.toString() : undefined,
+        bathrooms: projectData.bathrooms ? projectData.bathrooms.toString() : undefined,
       })
       .returning();
 
