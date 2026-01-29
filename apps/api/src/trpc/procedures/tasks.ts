@@ -67,7 +67,7 @@ export const tasksRouter = router({
       }
 
       if (assigneeId) {
-        const combined = and(whereClause, eq(tasks.assigneeId, assigneeId));
+        const combined = and(whereClause, eq(tasks.assignedToId, assigneeId));
         if (combined) whereClause = combined;
       }
 

@@ -71,7 +71,7 @@ export const onboardingRouter = router({
       const inviteValues = input.invites.map((invite) => ({
         tenantId: ctx.tenant.id,
         email: invite.email.toLowerCase(),
-        role: invite.role as 'admin' | 'member',
+        role: invite.role,
         token: generateId(32),
         invitedById: ctx.user.id,
         expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),

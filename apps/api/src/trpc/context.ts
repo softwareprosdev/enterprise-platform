@@ -39,7 +39,7 @@ export async function createContext({ req, res }: CreateFastifyContextOptions): 
             where: eq(tenants.id, userResult.tenantId),
           });
 
-          if (tenantResult && tenantResult.status !== 'suspended') {
+          if (tenantResult && tenantResult.status !== 'suspended' && tenantResult.status !== 'cancelled') {
             sessionId = session.id;
 
             user = {

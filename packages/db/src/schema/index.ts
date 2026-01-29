@@ -227,6 +227,9 @@ export const weatherConditionEnum = pgEnum('weather_condition', [
 // Villa Homes (Single Tenant Configuration)
 // =============================================================================
 
+// Tenant status for SaaS
+export const tenantStatusEnum = pgEnum('tenant_status', ['active', 'suspended', 'cancelled', 'trial']);
+
 // Keep tenants table for future expansion but lock to Villa Homes
 export const tenants = pgTable(
   'tenants',
@@ -234,6 +237,8 @@ export const tenants = pgTable(
     id: uuid('id').primaryKey().defaultRandom(),
     name: text('name').notNull().default('Villa Homes'),
     slug: text('slug').notNull().unique().default('villa-homes'),
+    domain: text('domain'),
+    logo: text('logo'),
     settings: jsonb('settings').default({
       companyAddress: null,
       companyPhone: null,
@@ -241,6 +246,11 @@ export const tenants = pgTable(
       defaultMarkupPercent: 20,
       warrantyPeriodMonths: 12,
     }),
+    plan: text('plan').default('free'),
+    status: tenantStatusEnum('status').default('trial').notNull(),
+    trialEndsAt: timestamp('trial_ends_at', { withTimezone: true }),
+    onboardingStep: text('onboarding_step').default('company'),
+    onboardingData: jsonb('onboarding_data').default({}),
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
     updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
   },
@@ -341,6 +351,29 @@ export const verificationTokens = pgTable(
   (table) => [index('verification_tokens_user_idx').on(table.userId)]
 );
 
+export const invitations = pgTable(
+  'invitations',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    tenantId: uuid('tenant_id')
+      .notNull()
+      .references(() => tenants.id, { onDelete: 'cascade' }),
+    email: text('email').notNull(),
+    role: userRoleEnum('role').notNull(),
+    token: text('token').notNull().unique(),
+    invitedById: uuid('invited_by_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
+    acceptedAt: timestamp('accepted_at', { withTimezone: true }),
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => [
+    index('invitations_tenant_idx').on(table.tenantId),
+    index('invitations_email_idx').on(table.email),
+  ]
+);
+
 // =============================================================================
 // Homeowners (was: Clients - Now represents home buyers)
 // =============================================================================
@@ -405,6 +438,103 @@ export const homeownerContacts = pgTable(
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
   },
   (table) => [index('homeowner_contacts_homeowner_idx').on(table.homeownerId)]
+);
+
+// =============================================================================
+// Clients (Alias for Homeowners - for API compatibility)
+// =============================================================================
+
+export const clientStatusEnum = pgEnum('client_status', [
+  'lead',
+  'prospect',
+  'onboarding',
+  'active',
+  'completed',
+  'churned',
+]);
+
+export const clients = pgTable(
+  'clients',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    tenantId: uuid('tenant_id')
+      .notNull()
+      .references(() => tenants.id, { onDelete: 'cascade' }),
+    companyName: text('company_name').notNull(),
+    contactName: text('contact_name').notNull(),
+    email: text('email').notNull(),
+    phone: text('phone'),
+    website: text('website'),
+    industry: text('industry'),
+    notes: text('notes'),
+    status: clientStatusEnum('status').default('lead').notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => [
+    index('clients_tenant_idx').on(table.tenantId),
+    index('clients_status_idx').on(table.status),
+    index('clients_email_idx').on(table.email),
+  ]
+);
+
+// =============================================================================
+// Plans & Subscriptions (SaaS Billing)
+// =============================================================================
+
+export const subscriptionStatusEnum = pgEnum('subscription_status', [
+  'active',
+  'past_due',
+  'cancelled',
+  'trialing',
+  'incomplete',
+]);
+
+export const plans = pgTable(
+  'plans',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    name: text('name').notNull(),
+    slug: text('slug').notNull().unique(),
+    description: text('description'),
+    price: decimal('price', { precision: 10, scale: 2 }).notNull(),
+    currency: text('currency').default('USD').notNull(),
+    interval: text('interval').default('month').notNull(), // 'month' | 'year'
+    features: jsonb('features').default([]),
+    limits: jsonb('limits').default({}),
+    stripePriceId: text('stripe_price_id'),
+    isActive: boolean('is_active').default(true).notNull(),
+    sortOrder: integer('sort_order').default(0),
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => [index('plans_slug_idx').on(table.slug)]
+);
+
+export const subscriptions = pgTable(
+  'subscriptions',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    tenantId: uuid('tenant_id')
+      .notNull()
+      .references(() => tenants.id, { onDelete: 'cascade' }),
+    planId: uuid('plan_id')
+      .notNull()
+      .references(() => plans.id),
+    status: subscriptionStatusEnum('status').default('trialing').notNull(),
+    stripeCustomerId: text('stripe_customer_id'),
+    stripeSubscriptionId: text('stripe_subscription_id'),
+    currentPeriodStart: timestamp('current_period_start', { withTimezone: true }),
+    currentPeriodEnd: timestamp('current_period_end', { withTimezone: true }),
+    cancelAtPeriodEnd: boolean('cancel_at_period_end').default(false).notNull(),
+    canceledAt: timestamp('canceled_at', { withTimezone: true }),
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => [
+    index('subscriptions_tenant_idx').on(table.tenantId),
+    index('subscriptions_stripe_customer_idx').on(table.stripeCustomerId),
+  ]
 );
 
 // =============================================================================
@@ -1284,6 +1414,9 @@ export const activityLogs = pgTable(
 export const tenantsRelations = relations(tenants, ({ many }) => ({
   users: many(users),
   homeowners: many(homeowners),
+  clients: many(clients),
+  invitations: many(invitations),
+  subscriptions: many(subscriptions),
   trades: many(trades),
   subcontractors: many(subcontractors),
   projects: many(projects),
@@ -1324,6 +1457,28 @@ export const homeownersRelations = relations(homeowners, ({ one, many }) => ({
 
 export const homeownerContactsRelations = relations(homeownerContacts, ({ one }) => ({
   homeowner: one(homeowners, { fields: [homeownerContacts.homeownerId], references: [homeowners.id] }),
+}));
+
+// Clients
+export const clientsRelations = relations(clients, ({ one, many }) => ({
+  tenant: one(tenants, { fields: [clients.tenantId], references: [tenants.id] }),
+  projects: many(projects),
+}));
+
+// Invitations
+export const invitationsRelations = relations(invitations, ({ one }) => ({
+  tenant: one(tenants, { fields: [invitations.tenantId], references: [tenants.id] }),
+  invitedBy: one(users, { fields: [invitations.invitedById], references: [users.id] }),
+}));
+
+// Plans & Subscriptions
+export const plansRelations = relations(plans, ({ many }) => ({
+  subscriptions: many(subscriptions),
+}));
+
+export const subscriptionsRelations = relations(subscriptions, ({ one }) => ({
+  tenant: one(tenants, { fields: [subscriptions.tenantId], references: [tenants.id] }),
+  plan: one(plans, { fields: [subscriptions.planId], references: [plans.id] }),
 }));
 
 // Trades
@@ -1379,7 +1534,7 @@ export const tasksRelations = relations(tasks, ({ one }) => ({
   project: one(projects, { fields: [tasks.projectId], references: [projects.id] }),
   projectPhase: one(projectPhases, { fields: [tasks.projectPhaseId], references: [projectPhases.id] }),
   trade: one(trades, { fields: [tasks.tradeId], references: [trades.id] }),
-  assignedTo: one(users, { fields: [tasks.assigneeId], references: [users.id] }),
+  assignedTo: one(users, { fields: [tasks.assignedToId], references: [users.id] }),
   assignedSubcontractor: one(subcontractors, { fields: [tasks.assignedSubcontractorId], references: [subcontractors.id] }),
 }));
 
