@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from '@tanstack/react-router';
+import { createFileRoute } from '@tanstack/react-router';
 import { useState } from 'react';
 import {
   Plus,
@@ -7,12 +7,9 @@ import {
   MoreHorizontal,
   Phone,
   Mail,
-  Calendar,
   DollarSign,
   TrendingUp,
-  User,
   Building2,
-  ChevronRight,
   Star,
   Clock,
   Target,
@@ -121,8 +118,7 @@ const DEMO_LEADS = [
 function LeadsPage() {
   const [view, setView] = useState<'kanban' | 'list'>('kanban');
   const [searchQuery, setSearchQuery] = useState('');
-  const [showCreateModal, setShowCreateModal] = useState(false);
-
+  
   const filteredLeads = DEMO_LEADS.filter(
     (lead) =>
       lead.contactName.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -154,7 +150,7 @@ function LeadsPage() {
           </p>
         </div>
         <button
-          onClick={() => setShowCreateModal(true)}
+          onClick={() => console.log('Add lead modal')}
           className="btn-primary flex items-center gap-2"
         >
           <Plus className="w-4 h-4" />

@@ -180,7 +180,7 @@ function DronesPage() {
           </div>
           <div className="divide-y divide-border max-h-[600px] overflow-y-auto">
             {DEMO_FLIGHTS.map((flight) => {
-              const StatusIcon = STATUS_CONFIG[flight.status as keyof typeof STATUS_CONFIG]?.icon || Calendar;
+              // Status icon available: STATUS_CONFIG[flight.status]?.icon
               return (
                 <div
                   key={flight.id}

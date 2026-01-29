@@ -9,15 +9,7 @@ import {
   Maximize2,
   Loader2,
   Sparkles,
-  MessageSquare,
-  Phone,
-  Calendar,
-  FolderKanban,
-  DollarSign,
-  AlertTriangle,
   CheckCircle2,
-  Clock,
-  Users,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 

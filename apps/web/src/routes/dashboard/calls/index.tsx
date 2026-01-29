@@ -7,19 +7,14 @@ import {
   PhoneMissed,
   Voicemail,
   Search,
-  Filter,
   Play,
   Pause,
   Download,
   MessageSquare,
   Clock,
-  User,
   Building2,
   AlertTriangle,
   Sparkles,
-  TrendingUp,
-  TrendingDown,
-  BarChart3,
 } from 'lucide-react';
 import { cn, formatDate } from '@/lib/utils';
 
