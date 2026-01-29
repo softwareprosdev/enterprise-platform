@@ -19,6 +19,7 @@
     "seed": "tsx src/seed.ts",
     "seed:prod": "tsx src/seed-production.ts",
     "seed:demo": "tsx src/seed-demo-rgv.ts",
+    "seed:madeira": "tsx src/seed-madeira.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
