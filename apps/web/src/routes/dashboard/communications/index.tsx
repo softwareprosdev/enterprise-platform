@@ -295,16 +295,11 @@ function CommunicationsPage() {
                       {/* Contact */}
                       <div className="col-span-2 mb-3 md:mb-0">
                         <div className="text-sm font-medium">
-                          {comm.contactName || 'Unknown'}
+                          {comm.fromNumber || comm.toNumber || 'Unknown'}
                         </div>
                         <div className="text-xs text-muted-foreground">
                           {formatPhoneNumber(comm.fromNumber || comm.toNumber || '')}
                         </div>
-                        {comm.contactType && (
-                          <div className="text-xs text-muted-foreground capitalize">
-                            {comm.contactType}
-                          </div>
-                        )}
                       </div>
 
                       {/* Linked To */}
@@ -404,11 +399,11 @@ function CommunicationsPage() {
                             </p>
                           </div>
                         )}
-                        {comm.actionItems && comm.actionItems.length > 0 && (
+                        {comm.actionItems && Array.isArray(comm.actionItems) && comm.actionItems.length > 0 && (
                           <div>
                             <h4 className="text-sm font-medium mb-2">Action Items</h4>
                             <ul className="space-y-1">
-                              {comm.actionItems.map((item: string, idx: number) => (
+                              {(comm.actionItems as string[]).map((item: string, idx: number) => (
                                 <li key={idx} className="flex items-center gap-2 text-sm">
                                   <span className="w-1.5 h-1.5 rounded-full bg-[#1e3a5f]" />
                                   {item}

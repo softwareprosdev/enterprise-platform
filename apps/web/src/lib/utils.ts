@@ -120,7 +120,6 @@ export const statusColors: Record<string, string> = {
   contracted: 'bg-yellow-500/20 text-yellow-400',
   construction: 'bg-[#e85d04]/20 text-[#e85d04]',
   punch_list: 'bg-purple-500/20 text-purple-400',
-  completed: 'bg-green-500/20 text-green-500',
   warranty: 'bg-indigo-500/20 text-indigo-400',
 
   // Task statuses
@@ -132,12 +131,9 @@ export const statusColors: Record<string, string> = {
 
   // Subcontractor statuses
   preferred: 'bg-green-500/20 text-green-500',
-  active: 'bg-blue-500/20 text-blue-400',
-  on_hold: 'bg-yellow-500/20 text-yellow-400',
   do_not_use: 'bg-red-500/20 text-red-500',
 
   // Communication statuses
-  completed: 'bg-green-500/20 text-green-500',
   pending_follow_up: 'bg-yellow-500/20 text-yellow-400',
   urgent: 'bg-red-500/20 text-red-500',
 
@@ -153,8 +149,6 @@ export const statusColors: Record<string, string> = {
   // Invoice statuses
   sent: 'bg-blue-500/20 text-blue-400',
   viewed: 'bg-yellow-500/20 text-yellow-400',
-  approved: 'bg-purple-500/20 text-purple-400',
-  paid: 'bg-green-500/20 text-green-500',
   overdue: 'bg-red-500/20 text-red-500',
   void: 'bg-gray-500/20 text-gray-400',
 
@@ -164,9 +158,6 @@ export const statusColors: Record<string, string> = {
   medium: 'bg-yellow-500/20 text-yellow-400',
   high: 'bg-orange-500/20 text-orange-400',
   critical: 'bg-red-500/20 text-red-500',
-
-  // Generic
-  draft: 'bg-muted text-muted-foreground',
 };
 
 // Priority color mapping - Construction

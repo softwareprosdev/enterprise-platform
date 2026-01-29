@@ -13,7 +13,7 @@ import {
   Star,
   Building2,
   Globe,
-  Code2,
+  HardHat,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -46,9 +46,9 @@ function LandingPage() {
             {/* Logo */}
             <Link to="/" className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-lg bg-gradient-primary flex items-center justify-center">
-                <Code2 className="w-5 h-5 text-white" />
+                <HardHat className="w-5 h-5 text-white" />
               </div>
-              <span className="font-bold text-lg">Enterprise</span>
+              <span className="font-bold text-lg">Villa Homes</span>
             </Link>
 
             {/* CTA */}
@@ -77,7 +77,7 @@ function LandingPage() {
             <motion.div variants={fadeInUp} className="mb-6">
               <span className="badge badge-primary text-sm px-4 py-1.5">
                 <Zap className="w-3.5 h-3.5 mr-1.5" />
-                Trusted by 500+ agencies worldwide
+                Trusted by high-growth builders nationwide
               </span>
             </motion.div>
 
@@ -86,8 +86,8 @@ function LandingPage() {
               variants={fadeInUp}
               className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight mb-6"
             >
-              Manage Your Software Agency{' '}
-              <span className="gradient-text">Like a Pro</span>
+              Build Smarter Homes with{' '}
+              <span className="gradient-text">Construction Intelligence</span>
             </motion.h1>
 
             {/* Subheadline */}
@@ -95,8 +95,8 @@ function LandingPage() {
               variants={fadeInUp}
               className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-8"
             >
-              Client onboarding, project management, billing, and team collaboration —
-              all in one beautiful platform built for modern software agencies.
+              Schedule projects, coordinate trades, track budgets, and keep homeowners
+              informed — all in one platform built for modern home builders.
             </motion.p>
 
             {/* CTA Buttons */}
@@ -124,7 +124,7 @@ function LandingPage() {
               </div>
               <div className="flex items-center gap-1">
                 <CheckCircle2 className="w-4 h-4 text-success" />
-                14-day free trial
+                14-day builder trial
               </div>
               <div className="flex items-center gap-1">
                 <CheckCircle2 className="w-4 h-4 text-success" />
@@ -160,10 +160,10 @@ function LandingPage() {
                   <div className="p-6 grid grid-cols-4 gap-4">
                     {/* Stats cards */}
                     {[
-                      { label: 'Active Projects', value: '12', icon: BarChart3, color: 'text-primary' },
-                      { label: 'Team Members', value: '24', icon: Users, color: 'text-secondary' },
-                      { label: 'Revenue', value: '$84.2K', icon: CreditCard, color: 'text-success' },
-                      { label: 'Tasks Due', value: '38', icon: Calendar, color: 'text-warning' },
+                      { label: 'Active Builds', value: '12', icon: Building2, color: 'text-primary' },
+                      { label: 'Crew Members', value: '24', icon: Users, color: 'text-secondary' },
+                      { label: 'Contract Value', value: '$8.4M', icon: CreditCard, color: 'text-success' },
+                      { label: 'Inspections', value: '7 Due', icon: Calendar, color: 'text-warning' },
                     ].map((stat, i) => (
                       <div key={i} className="bg-card rounded-lg p-4 border border-border">
                         <div className="flex items-center justify-between mb-2">
@@ -177,7 +177,7 @@ function LandingPage() {
 
                     {/* Chart placeholder */}
                     <div className="col-span-2 bg-card rounded-lg p-4 border border-border">
-                      <div className="text-sm font-medium mb-4">Revenue Overview</div>
+                      <div className="text-sm font-medium mb-4">Phase Progress</div>
                       <div className="h-32 flex items-end gap-2">
                         {[40, 65, 45, 80, 55, 90, 70].map((h, i) => (
                           <div
@@ -194,9 +194,9 @@ function LandingPage() {
                       <div className="text-sm font-medium mb-4">Recent Activity</div>
                       <div className="space-y-3">
                         {[
-                          'Project "E-commerce Platform" completed',
-                          'New client "TechCorp" onboarded',
-                          'Invoice #1042 paid ($4,500)',
+                          'Framing completed — Belmont Ridge Lot 12',
+                          'Homeowner approval received — Ashton Model',
+                          'Change order #1042 approved ($14,500)',
                         ].map((item, i) => (
                           <div key={i} className="flex items-center gap-2 text-sm">
                             <div className="w-2 h-2 rounded-full bg-success" />
@@ -223,10 +223,10 @@ function LandingPage() {
             viewport={{ once: true }}
           >
             <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-              Everything You Need to Scale
+              Everything You Need to Run the Jobsite
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Powerful features designed specifically for software development agencies
+              Construction-first workflows built for project managers, supers, and owners
             </p>
           </motion.div>
 
@@ -234,33 +234,33 @@ function LandingPage() {
             {[
               {
                 icon: Users,
-                title: 'Client Management',
-                description: 'Track leads, manage onboarding, and maintain lasting client relationships with our intuitive CRM.',
+                title: 'Homeowner Experience',
+                description: 'Keep homeowners informed with portals, selections, and approval workflows built for builders.',
               },
               {
                 icon: BarChart3,
-                title: 'Project Tracking',
-                description: 'Plan projects, set milestones, track tasks, and deliver on time with visual dashboards.',
+                title: 'Phase-Based Scheduling',
+                description: 'Track every phase from pre-construction to warranty with live progress insights.',
               },
               {
                 icon: CreditCard,
-                title: 'Invoicing & Billing',
-                description: 'Automated invoicing, milestone payments, and subscription management with Stripe.',
+                title: 'Budgets & Change Orders',
+                description: 'Monitor contract value, manage change orders, and keep margins protected.',
               },
               {
                 icon: Shield,
-                title: 'Role-Based Access',
-                description: 'Multi-tenant workspace with granular permissions for owners, admins, and team members.',
+                title: 'Role-Based Controls',
+                description: 'Give owners, supers, office staff, and clients exactly the access they need.',
               },
               {
                 icon: Calendar,
-                title: 'Resource Planning',
-                description: 'Allocate team members, track availability, and prevent overbooking.',
+                title: 'Trade Coordination',
+                description: 'Assign subcontractors, track inspections, and prevent scheduling collisions.',
               },
               {
                 icon: Globe,
-                title: 'Client Portal',
-                description: 'Branded portal for clients to view progress, approve deliverables, and communicate.',
+                title: 'Field-Ready Updates',
+                description: 'Capture daily logs, photos, and communications in one intelligent hub.',
               },
             ].map((feature, i) => (
               <motion.div
@@ -292,16 +292,16 @@ function LandingPage() {
             viewport={{ once: true }}
           >
             <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-              Trusted by Leading Agencies
+              Trusted by Leading Builders
             </h2>
             <p className="text-lg text-muted-foreground">
-              See what our customers have to say
+              The construction teams moving fastest rely on Villa Homes
             </p>
           </motion.div>
 
           {/* Company Logos */}
           <div className="flex flex-wrap justify-center items-center gap-8 mb-16 opacity-50">
-            {['TechCorp', 'InnovateLab', 'DevStudio', 'CodeWorks', 'PixelPerfect'].map((company) => (
+            {['Summit Homes', 'Hearthstone Builders', 'Ridgeview Construction', 'Evergreen Design-Build', 'Ironwood Residential'].map((company) => (
               <div key={company} className="flex items-center gap-2">
                 <Building2 className="w-6 h-6" />
                 <span className="font-semibold">{company}</span>
@@ -313,21 +313,21 @@ function LandingPage() {
           <div className="grid md:grid-cols-3 gap-6">
             {[
               {
-                quote: "This platform transformed how we manage client projects. We've cut our admin time in half.",
-                author: 'Sarah Chen',
-                role: 'Founder, TechCorp Agency',
+                quote: 'We can see every build phase and risk in one view. It changed how we run our jobsites.',
+                author: 'Sarah Caldwell',
+                role: 'COO, Summit Homes',
                 rating: 5,
               },
               {
-                quote: "The onboarding workflow is incredible. Clients love the professional experience.",
+                quote: 'Homeowner communication is finally organized. Our NPS scores jumped in 60 days.',
                 author: 'Marcus Johnson',
-                role: 'CEO, DevStudio',
+                role: 'Owner, Hearthstone Builders',
                 rating: 5,
               },
               {
-                quote: "Finally, a tool built by developers for developers. The milestone billing saves us hours.",
+                quote: 'We reduced change order delays and protected margin with the built-in approvals.',
                 author: 'Emily Rodriguez',
-                role: 'Managing Partner, CodeWorks',
+                role: 'VP Operations, Ridgeview Construction',
                 rating: 5,
               },
             ].map((testimonial, i) => (
@@ -365,10 +365,10 @@ function LandingPage() {
             viewport={{ once: true }}
           >
             <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-              Get Started in Minutes
+              Get Started in Days, Not Months
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Simple setup, powerful results
+              Launch quickly with your teams, trades, and active projects
             </p>
           </motion.div>
 
@@ -376,18 +376,18 @@ function LandingPage() {
             {[
               {
                 step: '1',
-                title: 'Sign up in seconds',
-                description: 'Create your workspace and invite your team. No credit card required.',
+                title: 'Set up your builder profile',
+                description: 'Configure your company details, branding, and project templates.',
               },
               {
                 step: '2',
-                title: 'Add your clients',
-                description: 'Import existing clients or start fresh with our guided onboarding.',
+                title: 'Import active builds',
+                description: 'Bring in homeowners, schedules, and budgets to get real-time insights.',
               },
               {
                 step: '3',
-                title: 'Manage & grow',
-                description: 'Track projects, send invoices, and scale your agency with confidence.',
+                title: 'Run the jobsite',
+                description: 'Coordinate trades, manage inspections, and keep homeowners updated.',
               },
             ].map((item, i) => (
               <motion.div
@@ -421,13 +421,13 @@ function LandingPage() {
             <div className="absolute inset-0 bg-gradient-radial from-primary/10 via-transparent to-transparent" />
             <div className="relative">
               <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-                Ready to Transform Your Agency?
+                Ready to Transform Your Construction Operations?
               </h2>
               <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-                Join hundreds of agencies already using Enterprise to streamline their operations.
+                Join builders using Villa Homes to deliver on schedule, protect margins, and delight homeowners.
               </p>
               <Link to="/auth/register" className="btn-primary text-lg !py-4 !px-8 glow">
-                Start Your Free Trial — No Credit Card Needed
+                Start Your Builder Trial — No Credit Card Needed
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Link>
             </div>
@@ -451,23 +451,23 @@ function LandingPage() {
             {[
               {
                 q: 'What is included in the free trial?',
-                a: 'The 14-day free trial includes full access to all Pro features. No credit card required to start.',
+                a: 'The 14-day builder trial includes full access to scheduling, homeowner portals, and analytics.',
               },
               {
                 q: 'How does pricing work?',
-                a: 'We offer transparent, per-seat pricing. Choose from Free, Starter ($49/mo), Pro ($149/mo), or Enterprise plans.',
+                a: 'Pricing scales with your team size and active projects. Plans start at $49/mo per builder team.',
               },
               {
-                q: 'Can I import my existing clients and projects?',
-                a: 'Yes! We support CSV import and have integrations with popular tools like Notion, Asana, and Jira.',
+                q: 'Can I import my existing homeowners and schedules?',
+                a: 'Yes. Import from CSV or connect your existing spreadsheets to bring active jobs live.',
               },
               {
                 q: 'Is my data secure?',
-                a: 'Absolutely. We use bank-level encryption, SOC 2 compliance, and your data is backed up daily.',
+                a: 'Absolutely. We use bank-level encryption with daily backups and audit-ready access controls.',
               },
               {
                 q: 'Do you offer customer support?',
-                a: 'All plans include email support. Pro and Enterprise plans get priority support with <4hr response times.',
+                a: 'All plans include builder-focused support. Pro and Enterprise include priority response times.',
               },
             ].map((faq, i) => (
               <motion.details
@@ -495,17 +495,17 @@ function LandingPage() {
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-lg bg-gradient-primary flex items-center justify-center">
-                <Code2 className="w-5 h-5 text-white" />
+                <HardHat className="w-5 h-5 text-white" />
               </div>
-              <span className="font-bold">Enterprise</span>
+              <span className="font-bold">Villa Homes</span>
             </div>
             <div className="flex items-center gap-6 text-sm text-muted-foreground">
               <a href="/privacy" className="hover:text-foreground transition-colors">Privacy</a>
               <a href="/terms" className="hover:text-foreground transition-colors">Terms</a>
-              <a href="mailto:support@softwarepros.dev" className="hover:text-foreground transition-colors">Contact</a>
+              <a href="mailto:support@villahomes.ai" className="hover:text-foreground transition-colors">Contact</a>
             </div>
             <div className="text-sm text-muted-foreground">
-              © {new Date().getFullYear()} SoftwarePros. All rights reserved.
+              © {new Date().getFullYear()} Villa Homes Construction Intelligence Platform.
             </div>
           </div>
         </div>

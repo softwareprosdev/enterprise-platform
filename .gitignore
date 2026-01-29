@@ -14,6 +14,16 @@ out/
 .env.local
 .env.*.local
 !.env.example
+.env.staging
+.env.production
+.env.test
+.env.development
+.env.coolify
+.env.coolify.staging
+.env.coolify.production
+.env.coolify.test
+.env.coolify.development
+.env.coolify.local
 
 # IDE
 .vscode/
@@ -45,3 +55,5 @@ pnpm-debug.log*
 
 # OS
 Thumbs.db
+.gitignore
+.gitmodules

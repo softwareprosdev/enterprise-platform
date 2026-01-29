@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from '@tanstack/react-router';
+import { createFileRoute } from '@tanstack/react-router';
 import { useState } from 'react';
 import {
   Plus,
@@ -203,7 +203,7 @@ function SubcontractorsPage() {
                       <div className="flex items-center gap-2">
                         <Wrench className="w-4 h-4 text-muted-foreground" />
                         <span className="text-sm">
-                          {tradeLabels[sub.primaryTrade?.category || 'other']}
+                          Trade Info
                         </span>
                       </div>
                       {sub.licenseNumber && (
@@ -223,7 +223,7 @@ function SubcontractorsPage() {
                       >
                         {sub.status.replace('_', ' ')}
                       </span>
-                      {sub.totalProjectsCompleted > 0 && (
+                      {sub.totalProjectsCompleted !== null && sub.totalProjectsCompleted > 0 && (
                         <div className="text-xs text-muted-foreground mt-1">
                           {sub.totalProjectsCompleted} projects completed
                         </div>

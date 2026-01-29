@@ -8,7 +8,7 @@ import {
   Building2,
   Mail,
   Phone,
-  ExternalLink,
+  Globe,
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react';
@@ -44,8 +44,8 @@ function ClientsPage() {
     status: statusFilter === 'all' ? undefined : statusFilter,
   });
 
-  const clients = data?.clients ?? [];
-  const totalPages = data?.pagination?.totalPages ?? 1;
+  const clients = data?.items ?? [];
+  const totalPages = data?.totalPages ?? 1;
 
   return (
     <div className="space-y-6">

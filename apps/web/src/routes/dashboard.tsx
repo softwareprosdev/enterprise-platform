@@ -5,7 +5,6 @@ import {
   FolderKanban,
   CheckSquare,
   Phone,
-  Wrench,
   CreditCard,
   Settings,
   LogOut,

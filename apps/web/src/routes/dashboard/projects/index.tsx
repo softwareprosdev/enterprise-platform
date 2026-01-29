@@ -13,11 +13,8 @@ import {
   ChevronRight,
   Home,
   MapPin,
-  Clock,
   HardHat,
   AlertTriangle,
-  CheckCircle2,
-  ArrowRight,
 } from 'lucide-react';
 import { trpc } from '@/lib/trpc';
 import { cn, statusColors, formatDate, formatCurrency, getInitials, phaseLabels } from '@/lib/utils';
@@ -341,14 +338,14 @@ function ProjectsPage() {
                 <div className="flex items-center justify-between text-xs mb-1">
                   <span className="text-muted-foreground">Phase</span>
                   <span className="font-medium">
-                    {phaseLabels[project.currentPhase] || project.currentPhase || 'Not started'}
+                    {project.currentPhase ? (phaseLabels[project.currentPhase] || project.currentPhase) : 'Not started'}
                   </span>
                 </div>
                 <div className="h-1.5 bg-muted rounded-full overflow-hidden">
                   <div
                     className={cn(
                       'h-full rounded-full',
-                      statusColors[project.currentPhase] || 'bg-muted'
+                      project.currentPhase ? (statusColors[project.currentPhase] || 'bg-muted') : 'bg-muted'
                     )}
                     style={{
                       width: project.phaseProgress ? `${project.phaseProgress}%` : '0%',
@@ -459,10 +456,10 @@ function ProjectsPage() {
                     <span
                       className={cn(
                         'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
-                        statusColors[project.currentPhase] || statusColors.pre_construction
+                        project.currentPhase ? (statusColors[project.currentPhase] || statusColors.pre_construction) : statusColors.pre_construction
                       )}
                     >
-                      {phaseLabels[project.currentPhase] || project.currentPhase || 'Planning'}
+                      {project.currentPhase ? (phaseLabels[project.currentPhase] || project.currentPhase) : 'Planning'}
                     </span>
                     <div className="text-xs text-muted-foreground mt-1">
                       {project.phaseProgress ? `${project.phaseProgress}%` : '0%'} complete

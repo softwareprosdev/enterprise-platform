@@ -4,16 +4,11 @@ import {
   Home,
   Users,
   HardHat,
-  Wrench,
   Phone,
   DollarSign,
-  TrendingUp,
   AlertTriangle,
-  Clock,
   CheckCircle2,
-  Calendar,
   MapPin,
-  ArrowRight,
   CheckSquare,
 } from 'lucide-react';
 import {
@@ -51,6 +46,7 @@ function DashboardPage() {
   const { data: upcomingDeadlines } = trpc.dashboard.upcomingDeadlines.useQuery();
   const { data: urgentCommunications } = trpc.dashboard.urgentCommunications.useQuery();
   const { data: projectsAtRisk } = trpc.dashboard.projectsAtRisk.useQuery();
+  const { data: recentActiveProjects } = trpc.dashboard.recentActiveProjects.useQuery();
 
   const statCards = [
     {
@@ -344,11 +340,11 @@ function DashboardPage() {
                     <div className="text-right">
                       <span className={cn(
                         'badge text-xs',
-                        new Date(inspection.scheduledDate) < new Date(Date.now() + 2 * 24 * 60 * 60 * 1000)
+                        inspection.scheduledDate && new Date(inspection.scheduledDate) < new Date(Date.now() + 2 * 24 * 60 * 60 * 1000)
                           ? 'bg-red-500/20 text-red-500'
                           : 'bg-yellow-500/20 text-yellow-500'
                       )}>
-                        {formatDate(inspection.scheduledDate)}
+                        {inspection.scheduledDate ? formatDate(inspection.scheduledDate) : 'TBD'}
                       </span>
                     </div>
                   </div>
@@ -397,10 +393,10 @@ function DashboardPage() {
             </Link>
           </div>
           <div className="space-y-3">
-            {!stats?.recentActiveProjects?.length ? (
+            {!recentActiveProjects?.length ? (
               <p className="text-muted-foreground text-sm text-center py-8">No active projects</p>
             ) : (
-              stats.recentActiveProjects.map((project) => (
+              recentActiveProjects.map((project) => (
                 <Link
                   key={project.id}
                   to="/dashboard/projects/$projectId"
@@ -422,9 +418,9 @@ function DashboardPage() {
                   <div className="text-right">
                     <span className={cn(
                       'text-xs px-2 py-1 rounded-full',
-                      statusColors[project.currentPhase]
+                      project.currentPhase ? statusColors[project.currentPhase] : 'bg-muted'
                     )}>
-                      {phaseLabels[project.currentPhase] || project.currentPhase}
+                      {project.currentPhase ? (phaseLabels[project.currentPhase] || project.currentPhase) : 'Planning'}
                     </span>
                     {project.hasRisk && (
                       <div className="flex items-center justify-end gap-1 mt-1">

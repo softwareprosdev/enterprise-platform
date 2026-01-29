@@ -2,22 +2,21 @@ import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
 import { useState } from 'react';
 import {
   ArrowLeft,
-  Building2,
   Mail,
   Phone,
   Globe,
   Calendar,
+  DollarSign,
+  TrendingUp,
+  AlertCircle,
+  CheckCircle2,
+  Clock,
   Edit,
   Trash2,
   Plus,
-  FolderKanban,
-  MoreHorizontal,
-  MapPin,
-  Briefcase,
-  FileText,
 } from 'lucide-react';
 import { trpc } from '@/lib/trpc';
-import { cn, statusColors, formatDate, formatCurrency, getInitials } from '@/lib/utils';
+import { cn, statusColors, formatDate, formatCurrency } from '@/lib/utils';
 
 export const Route = createFileRoute('/dashboard/clients/$clientId')({
   component: ClientDetailPage,

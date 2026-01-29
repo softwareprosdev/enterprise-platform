@@ -4,7 +4,7 @@ import superjson from 'superjson';
 import type { AppRouter } from '@enterprise/api/src/trpc/router';
 
 // Create tRPC React hooks
-export const trpc = createTRPCReact<AppRouter>();
+export const trpc: ReturnType<typeof createTRPCReact<AppRouter>> = createTRPCReact<AppRouter>();
 
 // Create tRPC client
 export function createTRPCClient() {
