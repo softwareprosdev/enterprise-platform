@@ -25,6 +25,7 @@ import { Route as DashboardLeadsIndexRouteImport } from './routes/dashboard/lead
 import { Route as DashboardHomeownersIndexRouteImport } from './routes/dashboard/homeowners/index'
 import { Route as DashboardCommunicationsIndexRouteImport } from './routes/dashboard/communications/index'
 import { Route as DashboardClientsIndexRouteImport } from './routes/dashboard/clients/index'
+import { Route as DashboardCallsIndexRouteImport } from './routes/dashboard/calls/index'
 import { Route as DashboardBillingIndexRouteImport } from './routes/dashboard/billing/index'
 import { Route as DashboardAnalyticsIndexRouteImport } from './routes/dashboard/analytics/index'
 import { Route as DashboardProjectsProjectIdRouteImport } from './routes/dashboard/projects/$projectId'
@@ -114,6 +115,11 @@ const DashboardClientsIndexRoute = DashboardClientsIndexRouteImport.update({
   path: '/clients/',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardCallsIndexRoute = DashboardCallsIndexRouteImport.update({
+  id: '/calls/',
+  path: '/calls/',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const DashboardBillingIndexRoute = DashboardBillingIndexRouteImport.update({
   id: '/billing/',
   path: '/billing/',
@@ -158,6 +164,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/projects/$projectId': typeof DashboardProjectsProjectIdRoute
   '/dashboard/analytics/': typeof DashboardAnalyticsIndexRoute
   '/dashboard/billing/': typeof DashboardBillingIndexRoute
+  '/dashboard/calls/': typeof DashboardCallsIndexRoute
   '/dashboard/clients/': typeof DashboardClientsIndexRoute
   '/dashboard/communications/': typeof DashboardCommunicationsIndexRoute
   '/dashboard/homeowners/': typeof DashboardHomeownersIndexRoute
@@ -180,6 +187,7 @@ export interface FileRoutesByTo {
   '/dashboard/projects/$projectId': typeof DashboardProjectsProjectIdRoute
   '/dashboard/analytics': typeof DashboardAnalyticsIndexRoute
   '/dashboard/billing': typeof DashboardBillingIndexRoute
+  '/dashboard/calls': typeof DashboardCallsIndexRoute
   '/dashboard/clients': typeof DashboardClientsIndexRoute
   '/dashboard/communications': typeof DashboardCommunicationsIndexRoute
   '/dashboard/homeowners': typeof DashboardHomeownersIndexRoute
@@ -204,6 +212,7 @@ export interface FileRoutesById {
   '/dashboard/projects/$projectId': typeof DashboardProjectsProjectIdRoute
   '/dashboard/analytics/': typeof DashboardAnalyticsIndexRoute
   '/dashboard/billing/': typeof DashboardBillingIndexRoute
+  '/dashboard/calls/': typeof DashboardCallsIndexRoute
   '/dashboard/clients/': typeof DashboardClientsIndexRoute
   '/dashboard/communications/': typeof DashboardCommunicationsIndexRoute
   '/dashboard/homeowners/': typeof DashboardHomeownersIndexRoute
@@ -229,6 +238,7 @@ export interface FileRouteTypes {
     | '/dashboard/projects/$projectId'
     | '/dashboard/analytics/'
     | '/dashboard/billing/'
+    | '/dashboard/calls/'
     | '/dashboard/clients/'
     | '/dashboard/communications/'
     | '/dashboard/homeowners/'
@@ -251,6 +261,7 @@ export interface FileRouteTypes {
     | '/dashboard/projects/$projectId'
     | '/dashboard/analytics'
     | '/dashboard/billing'
+    | '/dashboard/calls'
     | '/dashboard/clients'
     | '/dashboard/communications'
     | '/dashboard/homeowners'
@@ -274,6 +285,7 @@ export interface FileRouteTypes {
     | '/dashboard/projects/$projectId'
     | '/dashboard/analytics/'
     | '/dashboard/billing/'
+    | '/dashboard/calls/'
     | '/dashboard/clients/'
     | '/dashboard/communications/'
     | '/dashboard/homeowners/'
@@ -407,6 +419,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardClientsIndexRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/calls/': {
+      id: '/dashboard/calls/'
+      path: '/calls'
+      fullPath: '/dashboard/calls/'
+      preLoaderRoute: typeof DashboardCallsIndexRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/dashboard/billing/': {
       id: '/dashboard/billing/'
       path: '/billing'
@@ -453,6 +472,7 @@ interface DashboardRouteChildren {
   DashboardProjectsProjectIdRoute: typeof DashboardProjectsProjectIdRoute
   DashboardAnalyticsIndexRoute: typeof DashboardAnalyticsIndexRoute
   DashboardBillingIndexRoute: typeof DashboardBillingIndexRoute
+  DashboardCallsIndexRoute: typeof DashboardCallsIndexRoute
   DashboardClientsIndexRoute: typeof DashboardClientsIndexRoute
   DashboardCommunicationsIndexRoute: typeof DashboardCommunicationsIndexRoute
   DashboardHomeownersIndexRoute: typeof DashboardHomeownersIndexRoute
@@ -470,6 +490,7 @@ const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardProjectsProjectIdRoute: DashboardProjectsProjectIdRoute,
   DashboardAnalyticsIndexRoute: DashboardAnalyticsIndexRoute,
   DashboardBillingIndexRoute: DashboardBillingIndexRoute,
+  DashboardCallsIndexRoute: DashboardCallsIndexRoute,
   DashboardClientsIndexRoute: DashboardClientsIndexRoute,
   DashboardCommunicationsIndexRoute: DashboardCommunicationsIndexRoute,
   DashboardHomeownersIndexRoute: DashboardHomeownersIndexRoute,
