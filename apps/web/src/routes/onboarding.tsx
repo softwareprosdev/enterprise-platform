@@ -57,7 +57,11 @@ function OnboardingPage() {
   }, [data]);
 
   const stepIndex = steps.indexOf(currentStep);
-  const goToNext = (next: string) => setCurrentStep(next as typeof currentStep);
+  const goToNext = (next: string) => {
+    if (['company', 'team', 'branding', 'integrations', 'billing', 'complete'].includes(next)) {
+      setCurrentStep(next as 'company' | 'team' | 'branding' | 'integrations' | 'billing' | 'complete');
+    }
+  };
 
   const integrationOptions = ['Buildertrend', 'Procore', 'QuickBooks', 'DocuSign', 'Twilio'];
 

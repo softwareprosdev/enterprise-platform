@@ -90,7 +90,7 @@ export const authRouter = router({
     await ctx.db.update(users).set({ lastLoginAt: new Date() }).where(eq(users.id, user.id));
 
     // Set cookie
-    ctx.res.setCookie('session', sessionId, {
+    (ctx.res as any).setCookie('session', sessionId, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
@@ -237,7 +237,7 @@ export const authRouter = router({
     });
 
     // Set cookie
-    ctx.res.setCookie('session', sessionId, {
+    (ctx.res as any).setCookie('session', sessionId, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
@@ -334,7 +334,7 @@ export const authRouter = router({
       await ctx.db.update(users).set({ lastLoginAt: new Date() }).where(eq(users.id, user.id));
 
       // Set cookie
-      ctx.res.setCookie('session', sessionId, {
+      (ctx.res as any).setCookie('session', sessionId, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
@@ -363,7 +363,7 @@ export const authRouter = router({
       await ctx.db.delete(sessions).where(eq(sessions.id, ctx.sessionId));
     }
 
-    ctx.res.clearCookie('session', { path: '/' });
+    (ctx.res as any).clearCookie('session', { path: '/' });
 
     return { success: true };
   }),

@@ -16,7 +16,7 @@ export interface Context {
 export async function createContext({ req, res }: CreateFastifyContextOptions): Promise<Context> {
   // Get session token from cookie or header
   const sessionToken =
-    req.cookies?.['session'] || req.headers.authorization?.replace('Bearer ', '');
+    (req as any).cookies?.['session'] || req.headers.authorization?.replace('Bearer ', '');
 
   let user: AuthUser | null = null;
   let tenant: Context['tenant'] = null;
