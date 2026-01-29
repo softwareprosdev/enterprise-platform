@@ -2,7 +2,6 @@ import { createFileRoute } from '@tanstack/react-router';
 import { useState } from 'react';
 import {
   MapPin,
-  Users,
   Clock,
   Navigation,
   AlertTriangle,
@@ -16,7 +15,7 @@ import {
   Filter,
   Calendar,
 } from 'lucide-react';
-import { cn, formatDate } from '@/lib/utils';
+import { cn } from '@/lib/utils';
 
 export const Route = createFileRoute('/dashboard/crew/')({
   component: CrewTrackingPage,
