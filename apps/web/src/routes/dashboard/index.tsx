@@ -312,7 +312,7 @@ function DashboardPage() {
       {/* Bottom row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Upcoming deadlines */}
-        <motion.div {...fadeInvUp} className="bg-card rounded-xl border border-border p-5">
+        <motion.div {...fadeInUp} className="bg-card rounded-xl border border-border p-5">
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-semibold">Upcoming Deadlines</h2>
             <Link
