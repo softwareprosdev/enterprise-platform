@@ -4,6 +4,7 @@ import helmet from '@fastify/helmet';
 import cookie from '@fastify/cookie';
 import rateLimit from '@fastify/rate-limit';
 import { fastifyTRPCPlugin } from '@trpc/server/adapters/fastify';
+import { renderTrpcPanel } from 'trpc-panel';
 import { appRouter } from './trpc/router.js';
 import { createContext } from './trpc/context.js';
 import { redis } from './lib/redis.js';
@@ -56,6 +57,20 @@ async function main() {
     uptime: process.uptime(),
   }));
 
+  // Add content type parser for tRPC requests
+  fastify.addContentTypeParser(
+    ['application/json', 'application/json; charset=utf-8'],
+    { parseAs: 'string' },
+    function (_, body, _done) {
+      try {
+        const json = typeof body === 'string' ? JSON.parse(body) : body;
+        return json;
+      } catch {
+        return body;
+      }
+    }
+  );
+
   // tRPC handler
   await fastify.register(fastifyTRPCPlugin, {
     prefix: '/trpc',
@@ -67,6 +82,17 @@ async function main() {
       },
     },
   });
+
+  // tRPC Panel - API documentation UI
+  if (isDev) {
+    fastify.get('/panel', async (_, reply) => {
+      const panelHtml = renderTrpcPanel(appRouter, {
+        url: `http://localhost:${PORT}/trpc`,
+        transformer: 'superjson',
+      });
+      reply.type('text/html').send(panelHtml);
+    });
+  }
 
   // Graceful shutdown
   const signals = ['SIGINT', 'SIGTERM'] as const;
@@ -84,6 +110,9 @@ async function main() {
     await fastify.listen({ port: PORT, host: HOST });
     fastify.log.info(`API server running at http://${HOST}:${PORT}`);
     fastify.log.info(`tRPC endpoint: http://${HOST}:${PORT}/trpc`);
+    if (isDev) {
+      fastify.log.info(`tRPC Panel: http://${HOST}:${PORT}/panel`);
+    }
   } catch (err) {
     fastify.log.error(err);
     process.exit(1);
